@@ -12,7 +12,7 @@ const userSchema = new mongoose.Schema({
     },
     passwordHash: {
         type: String,
-        required: true,
+        required: false,
     },
     role: {
         type: String,
@@ -20,6 +20,11 @@ const userSchema = new mongoose.Schema({
         default: 'Team Member',
         required: true,
     },
+    accountStatus: {
+        type: String,
+        enum: ['Pending', 'Approved', 'Active'],
+        default: 'Pending',
+    }
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', userSchema);
