@@ -81,3 +81,19 @@ exports.getAllReports = async (req, res) => {
         res.status(500).json({ message: 'Server error', error: error.message });
     }
 };
+
+// manager unlocks a report for editing
+exports.unlockReport = async (req, res) => {
+    try {
+        let report = await Report.findById(req.params.id);
+        if (!report) return res.status(404).json({ message: 'Report not found' });
+
+        report.status = 'draft';
+        report.submittedAt = null; // clear the submission stamp
+        await report.save();
+
+        res.status(200).json({ message: 'Report unlocked for editing', report });
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
