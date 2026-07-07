@@ -36,6 +36,11 @@ exports.updateReport = async (req, res) => {
 
         if (!report) return res.status(404).json({ message: 'Report not found' });
 
+        // team members cannot edit a submitted report
+        if (report.status === 'submitted' && req.user.role !== 'Manager') {
+            return res.status(403).json({ message: 'Cannot edit a submitted report' });
+        }
+
         // Only allow the owner of the report to update it
         if (report.userId.toString() !== req.user.id && req.user.role !== 'Manager') {
             return res.status(403).json({ message: 'Not authorized to update this report' });
