@@ -21,7 +21,7 @@ const reportSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ['pending', 'submitted', 'late'],
+        enum: ['draft', 'submitted', 'late'],
         default: 'pending',
     },
     tasksCompleted: {
