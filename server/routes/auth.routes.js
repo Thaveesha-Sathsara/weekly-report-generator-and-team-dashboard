@@ -6,12 +6,12 @@ const {
     setupPassword,
     login
 } = require('../controllers/auth.controller');
-const { protect, adminOnly } = require('../middleware/auth.middleware');
+const { protect, managerOnly } = require('../middleware/auth.middleware');
 
 router.post('/apply', applyForAccess);
 router.post('/setup-password', setupPassword);
 router.post('/login', login);
 
-router.put('/approve/:userId', protect, adminOnly, approveUser);
+router.put('/approve/:userId', protect, managerOnly, approveUser);
 
 module.exports = router;

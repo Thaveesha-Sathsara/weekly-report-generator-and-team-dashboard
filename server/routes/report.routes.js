@@ -6,11 +6,11 @@ const {
     updateReport,
     getAllReports
 } = require('../controllers/report.controller');
-const { protect, adminOnly } = require('../middleware/auth.middleware');
+const { protect, managerOnly } = require('../middleware/auth.middleware');
 
 router.get('/me', protect, getMyReports);
 router.post('/', protect, createReport);
 router.put('/:id', protect, updateReport);
-router.get('/', protect, adminOnly, getAllReports);
+router.get('/', protect, managerOnly, getAllReports);
 
 module.exports = router;

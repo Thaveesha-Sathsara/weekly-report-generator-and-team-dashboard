@@ -17,7 +17,7 @@ exports.protect = (req, res, next) => {
     }
 };
 
-exports.adminOnly = (req, res, next) => {
+exports.managerOnly = (req, res, next) => {
     if (req.user && req.user.role === 'Manager') {
         next();
     } else {
