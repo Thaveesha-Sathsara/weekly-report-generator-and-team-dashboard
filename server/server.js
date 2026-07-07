@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config();
+import authRoutes from './routes/auth.routes.js';
 
 const app = express();
 
@@ -24,9 +25,11 @@ app.get('/api/health', (req, res) => {
     res.status(200).json({ message: 'Server is running' });
 });
 
+app.use('/api/auth', authRoutes);
+
 const PORT = process.env.PORT;
 connectDB().then(() => {
     app.listen(PORT, () => {
-        console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`); ``
+        console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
     });
 });
