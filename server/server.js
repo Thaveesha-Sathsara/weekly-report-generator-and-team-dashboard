@@ -2,7 +2,9 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config();
-import authRoutes from './routes/auth.routes.js';
+const authRoutes = require ('./routes/auth.routes.js');
+const projectRoutes = require('./routes/project.routes.js');
+const reportRoutes = require('./routes/report.routes.js');
 
 const app = express();
 
@@ -26,6 +28,8 @@ app.get('/api/health', (req, res) => {
 });
 
 app.use('/api/auth', authRoutes);
+app.use('/api/projects', projectRoutes);
+app.use('/api/reports', reportRoutes);
 
 const PORT = process.env.PORT;
 connectDB().then(() => {
