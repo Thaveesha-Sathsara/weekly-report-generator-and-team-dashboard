@@ -13,4 +13,4 @@ const projectAssignmentSchema = new mongoose.Schema({
     }
 }, { timestamps: true });
 
-module.exports = mongoose.module('PorjectAssignment', projectAssignmentSchema);
+module.exports = mongoose.model('ProjectAssignment', projectAssignmentSchema);
