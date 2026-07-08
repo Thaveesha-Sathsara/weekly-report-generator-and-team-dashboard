@@ -1,5 +1,5 @@
 const User = require('../models/user.model');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 // user apply for account
@@ -8,7 +8,7 @@ exports.registerRequest = async (req, res) => {
         const { fullName, email } = req.body;
         
         const existingUser = await User.findOne({ email });
-        if (existinguser) {
+        if (existingUser) {
             return res.status(400).json({ message: 'User with this email already exists' });
         }
 
@@ -36,7 +36,7 @@ exports.approveUser = async (req, res) => {
         if (!user) return res.status(404).json({ message: 'User not found' });
 
         user.accountStatus = 'Approved';
-        if (!assignedRole) {
+        if (assignedRole) {
             user.role = assignedRole;
         }
         await user.save();
@@ -50,7 +50,7 @@ exports.approveUser = async (req, res) => {
 // approved user sets their passwords for acc activation
 exports.setupPassword = async (req, res) => {
     try {
-        const { email, newPassword } = req.bodyl
+        const { email, newPassword } = req.body;
 
         const user = await User.findOne({ email });
         if (!user) return res.status(404).json({ message: 'User not found' });
@@ -64,10 +64,10 @@ exports.setupPassword = async (req, res) => {
 
         const salt = await bcrypt.genSalt(10);
         user.passwordHash = await bcrypt.hash(newPassword, salt);
-        user.accountState = 'Active';
+        user.accountStatus = 'Active';
         await user.save();
 
-        res.status(200).json({ message: 'Password set successfully. Your cna now login.' });
+        res.status(200).json({ message: 'Password set successfully. You can now login.' });
     } catch (error) {
         res.status(500).json({ message: 'Server error', error: error.message });
     }

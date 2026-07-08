@@ -3,7 +3,8 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { useNavigate, Link } from 'react-router-dom';
-import { AuthContext } from '../context/AuthContext.jsx';
+import { AuthContext } from '@/context/AuthContext';
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -25,7 +26,7 @@ import {
 
 const loginSchema = z.object({
     email: z.string().email({ message: "Invalid email address" }),
-    password: z.string().min(6, { message: "Password must be at least 6 characters long" }),
+    password: z.string().min(6, { message: "Password must be at least 6 characters" }),
 });
 
 const Login = () => {
@@ -35,29 +36,23 @@ const Login = () => {
 
     const form = useForm({
         resolver: zodResolver(loginSchema),
-        defaultValues: {
-            email: "",
-            password: "",
-        },
+        defaultValues: { email: "", password: "" },
     });
 
     const onSubmit = async (data) => {
         setIsSubmitting(true);
         const success = await login(data.email, data.password);
         setIsSubmitting(false);
-
-        if (success) {
-            navigate("/dashboard");
-        }
+        if (success) navigate("/dashboard");
     };
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-slate-50 dark:bg-zinc-950 px-4">
-            <Card className="w-full max-w-md">
+            <Card className="w-full max-w-md shadow-lg border-slate-200 dark:border-zinc-800">
                 <CardHeader className="space-y-1">
                     <CardTitle className="text-2xl font-bold tracking-tight">Sign in</CardTitle>
                     <CardDescription>
-                        Enter your email and password to access your account.
+                        Enter your email and password to access the portal.
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -70,7 +65,7 @@ const Login = () => {
                                     <FormItem>
                                         <FormLabel>Email</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="name@sisenco.com" {...field} />
+                                            <Input placeholder="name@sisencodigital.com" {...field} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -89,16 +84,16 @@ const Login = () => {
                                     </FormItem>
                                 )}
                             />
-                            <Button type="submit" className="w-full" disabled={isSubmitting}>
+                            <Button type="submit" className="w-full mt-2" disabled={isSubmitting}>
                                 {isSubmitting ? "Signing in..." : "Sign in"}
                             </Button>
                         </form>
                     </Form>
                 </CardContent>
                 <CardFooter className="flex justify-center">
-                    <div className="text-sm text-muted-foreground">
+                    <div className="text-sm text-slate-500 dark:text-slate-400">
                         Don't have an account?{" "}
-                        <Link to="/apply" className="text-primary hover:underline font-medium">
+                        <Link to="/register" className="text-blue-600 hover:underline font-medium dark:text-blue-400">
                             Apply for access
                         </Link>
                     </div>

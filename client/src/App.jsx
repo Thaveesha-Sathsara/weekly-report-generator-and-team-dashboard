@@ -1,9 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from "@/components/ui/sonner";
 import Login from './pages/Login';
-// We will build these next!
-// import Apply from './pages/Apply'; 
-// import Dashboard from './pages/Dashboard'; 
+import Register from './pages/Register'; 
 
 function App() {
   return (
@@ -11,8 +9,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="/login" element={<Login />} />
-        {/* <Route path="/apply" element={<Apply />} /> */}
-        {/* <Route path="/dashboard" element={<Dashboard />} /> */}
+        <Route path="/register" element={<Register />} />
       </Routes>
       <Toaster richColors position="top-right" />
     </>
