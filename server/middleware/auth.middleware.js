@@ -1,19 +1,30 @@
 const jwt = require('jsonwebtoken');
+const User = require('../models/user.model'); 
 
-exports.protect = (req, res, next) => {
-    let token = req.headers.authorization;
+exports.protect = async (req, res, next) => {
+    let token;
 
-    if (token && token.startsWith('Bearer')) {
+    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
         try {
-            token: token.split(' ')[1];
-            const decode = jwt.verify(token, process.env.JWT_SECRET);
-            req.user - decoded;
+            token = req.headers.authorization.split(' ')[1];
+
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+            req.user = await User.findById(decoded.id).select('-passwordHash');
+            
+            if (!req.user) {
+                return res.status(401).json({ message: 'User not found' });
+            }
+
             next();
         } catch (error) {
-            res.status(401).json({ message: 'Not authorized, token failed' });
+            console.error("Token verification failed:", error.message);
+            return res.status(401).json({ message: 'Not authorized, token failed' });
         }
-    } else {
-        res.status(401).json({ message: 'Not authorized, no token' });
+    }
+
+    if (!token) {
+        return res.status(401).json({ message: 'Not authorized, no token provided' });
     }
 };
 
@@ -21,6 +32,6 @@ exports.managerOnly = (req, res, next) => {
     if (req.user && req.user.role === 'Manager') {
         next();
     } else {
-        res.status(403).json({ message: 'Not authorized as a Manager' });
+        res.status(403).json({ message: 'Not authorized as Manager' });
     }
 };
