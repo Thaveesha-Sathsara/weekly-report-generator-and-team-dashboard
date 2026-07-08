@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { Navigate, Outlet, Link } from "react-router-dom";
 import { AuthContext } from "@/context/AuthContext";
-import { LayoutDashboard, FileText, FolderKanban, Lougout } from "lucide-react";
+import { LayoutDashboard, FileText, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const DashboardLayout = () => {
@@ -43,9 +43,34 @@ const DashboardLayout = () => {
                 </nav>
 
                 <div className="p-4 border-t border-blue-200">
-                    
+                    <div className="mb-4 px-2">
+                        <p className="text-sm font-semibold truncate">{currentUser.fullName}</p>
+                        <p className="text-xs text-blue-500 truncate">{currentUser.role}</p>
+                    </div>
+                    <Button variant="destructive" className="w-full gap-2" onClick={logout}>
+                        <LogOut className="h-4 w-4" />
+                        Log Out
+                    </Button>
                 </div>
             </aside>
+
+            {/* main content area */}
+            <div className="flex-1 flex flex-col overflow-hidden">
+                {/* topbar */}
+                <header className="h-16 border-b border-blue-200 bg-white flex items-center justify-end px-6">
+                    <div className="flex items-center gap-4">
+                        <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold">
+                            {currentUser.fullName.charAt(0)}
+                        </div>
+                    </div>
+                </header>
+
+                <main className="flex-1 overflow-y-auto p-6">
+                    <Outlet />
+                </main>
+            </div>
         </div>
-    )
-}
+    );
+};
+
+export default DashboardLayout;
