@@ -4,6 +4,7 @@ import Login from './pages/Login';
 import Register from './pages/Register'; 
 import DashboardLayout from './components/layout/DashboardLayout';
 import TeamDashboard from './pages/TeamDashboard';
+import SetupPassword from './pages/SetupPassword';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/setup-password" element={<SetupPassword />} />
 
         <Route element={<DashboardLayout />}>
           <Route path="/dashboard" element={<div>Dashboard Content</div>} />

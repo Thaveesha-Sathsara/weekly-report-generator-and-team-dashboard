@@ -37,7 +37,7 @@ const TeamDashboard = () => {
 
     const handleApprove = async (userId, role) => {
         try {
-            await axiosInstance.post(`/auth/approve/${userId}`, { assignedRole: role });
+            await axiosInstance.put(`/auth/approve/${userId}`, { assignedRole: role });
             toast.success("User approved!");
             fetchData();
         } catch (error) {
