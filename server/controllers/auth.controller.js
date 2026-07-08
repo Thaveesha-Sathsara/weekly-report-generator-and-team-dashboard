@@ -107,3 +107,12 @@ exports.login = async (req, res) => {
         res.status(500).json({ message: 'Server error', error: error.message });
     }
 };
+
+exports.getPendingUsers = async (req, res) => {
+    try {
+        const pendingUsers = await User.find({ accountStatus: 'Pending' }).select('-passwordHash');
+        res.status(200).json(pendingUsers);
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
