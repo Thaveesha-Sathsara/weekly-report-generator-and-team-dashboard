@@ -5,9 +5,16 @@ const projectSchema = new mongoose.Schema({
         type: String,
         required: true,
         unique: true,
+        trim: true,
     },
     description: {
         type: String,
+        trim: true,
+    },
+    status: {
+        type: String,
+        enum: ['Active', 'Archived'],
+        default: 'Active',
     }
 }, { timestamps: true });
 
