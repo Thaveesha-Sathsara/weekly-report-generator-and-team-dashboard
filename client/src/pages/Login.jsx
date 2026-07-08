@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '@/context/AuthContext';
+import { Mail, Lock, ChevronRight } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,17 +13,8 @@ import {
     FormControl,
     FormField,
     FormItem,
-    FormLabel,
     FormMessage,
 } from '@/components/ui/form';
-import {
-    Card,
-    CardHeader,
-    CardTitle,
-    CardDescription,
-    CardContent,
-    CardFooter,
-} from '@/components/ui/card';
 
 const loginSchema = z.object({
     email: z.string().email({ message: "Invalid email address" }),
@@ -47,58 +39,110 @@ const Login = () => {
     };
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-slate-50 dark:bg-zinc-950 px-4">
-            <Card className="w-full max-w-md shadow-lg border-slate-200 dark:border-zinc-800">
-                <CardHeader className="space-y-1">
-                    <CardTitle className="text-2xl font-bold tracking-tight">Sign in</CardTitle>
-                    <CardDescription>
-                        Enter your email and password to access the portal.
-                    </CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                            <FormField
-                                control={form.control}
-                                name="email"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Email</FormLabel>
-                                        <FormControl>
-                                            <Input placeholder="name@sisencodigital.com" {...field} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                control={form.control}
-                                name="password"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Password</FormLabel>
-                                        <FormControl>
-                                            <Input type="password" placeholder="••••••••" {...field} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <Button type="submit" className="w-full mt-2" disabled={isSubmitting}>
-                                {isSubmitting ? "Signing in..." : "Sign in"}
-                            </Button>
-                        </form>
-                    </Form>
-                </CardContent>
-                <CardFooter className="flex justify-center">
-                    <div className="text-sm text-slate-500 dark:text-slate-400">
-                        Don't have an account?{" "}
-                        <Link to="/register" className="text-blue-600 hover:underline font-medium dark:text-blue-400">
-                            Apply for access
-                        </Link>
-                    </div>
-                </CardFooter>
-            </Card>
+        /* The custom dotted background with a soft blue gradient */
+        <div 
+            className="flex items-center justify-center min-h-screen px-4"
+            style={{
+                backgroundColor: '#f8fafc',
+                backgroundImage: `radial-gradient(#cbd5e1 1px, transparent 1px)`,
+                backgroundSize: '24px 24px'
+            }}
+        >
+            {/* The heavily styled Card container */}
+            <div className="w-full max-w-[420px] bg-white rounded-[2.5rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] border border-slate-100 p-8 sm:p-12 relative overflow-hidden">
+                
+                {/* Subtle background glow effect for that modern feel */}
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-32 bg-blue-500/10 blur-3xl rounded-full pointer-events-none" />
+
+                <div className="text-center space-y-2 mb-8 relative z-10">
+                    <h1 className="text-3xl font-extrabold tracking-tight text-slate-900">
+                        Welcome Back
+                    </h1>
+                    <p className="text-sm text-slate-500 font-medium">
+                        Log in to manage your tasks.
+                    </p>
+                </div>
+
+                <div className="relative flex items-center justify-center mb-8">
+                    <div className="absolute w-full border-t border-slate-100"></div>
+                    <span className="relative bg-white px-4 text-xs font-bold text-slate-300 uppercase tracking-wider">
+                        OR
+                    </span>
+                </div>
+
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5 relative z-10">
+                        
+                        <FormField
+                            control={form.control}
+                            name="email"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormControl>
+                                        <div className="relative flex items-center">
+                                            <Mail className="absolute left-4 w-5 h-5 text-slate-400" />
+                                            <Input 
+                                                placeholder="Email Address" 
+                                                className="pl-11 h-12 rounded-2xl border-slate-200 bg-slate-50/50 focus-visible:bg-white focus-visible:ring-blue-500 text-base" 
+                                                {...field} 
+                                            />
+                                        </div>
+                                    </FormControl>
+                                    <FormMessage className="ml-1" />
+                                </FormItem>
+                            )}
+                        />
+
+                        <FormField
+                            control={form.control}
+                            name="password"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormControl>
+                                        <div className="relative flex items-center">
+                                            <Lock className="absolute left-4 w-5 h-5 text-slate-400" />
+                                            <Input 
+                                                type="password" 
+                                                placeholder="Password" 
+                                                className="pl-11 h-12 rounded-2xl border-slate-200 bg-slate-50/50 focus-visible:bg-white focus-visible:ring-blue-500 text-base"
+                                                {...field} 
+                                            />
+                                        </div>
+                                    </FormControl>
+                                    <FormMessage className="ml-1" />
+                                </FormItem>
+                            )}
+                        />
+
+                        <div className="flex justify-end pt-1">
+                            <a href="#" className="text-sm font-bold text-blue-600 hover:text-blue-700 transition-colors">
+                                Forgot Password?
+                            </a>
+                        </div>
+
+                        <Button 
+                            type="submit" 
+                            className="w-full h-12 rounded-2xl bg-blue-600 hover:bg-blue-700 text-base font-bold shadow-lg shadow-blue-500/25 transition-all mt-4" 
+                            disabled={isSubmitting}
+                        >
+                            {isSubmitting ? (
+                                "Verifying..."
+                            ) : (
+                                <span className="flex items-center gap-2">
+                                    Log In <ChevronRight className="w-5 h-5" />
+                                </span>
+                            )}
+                        </Button>
+                    </form>
+                </Form>
+
+                <div className="mt-8 text-center text-sm font-medium text-slate-500">
+                    Don't have an account?{" "}
+                    <Link to="/register" className="text-blue-600 font-bold hover:underline">
+                        Sign up
+                    </Link>
+                </div>
+            </div>
         </div>
     );
 };

@@ -114,7 +114,7 @@ const TeamDashboard = () => {
                                 <tbody className="divide-y divide-blue-100">
                                     {reports.map(report => (
                                         <tr key={report._id} className="hover:bg-blue-50 transition-colors">
-                                            <td className="px-4 py-4 font-medium">{report.userId?.fullName} || 'Unknow'</td>
+                                            <td className="px-4 py-4 font-medium">{report.userId?.fullName}</td>
                                             <td className="px-4 py-4">{report.projectId?.name} || 'No Project'</td>
                                             <td className="px-4 py-4 text-blue-500">{report.weekStartDate} to {report.weekEndDate}</td>
                                             <td className="px-4 py-4">
