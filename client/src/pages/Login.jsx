@@ -39,7 +39,7 @@ const Login = () => {
     };
 
     return (
-        /* The custom dotted background with a soft blue gradient */
+        /* bg */
         <div 
             className="flex items-center justify-center min-h-screen px-4"
             style={{
@@ -48,10 +48,10 @@ const Login = () => {
                 backgroundSize: '24px 24px'
             }}
         >
-            {/* The heavily styled Card container */}
+            {/* container */}
             <div className="w-full max-w-[420px] bg-white rounded-[2.5rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] border border-slate-100 p-8 sm:p-12 relative overflow-hidden">
                 
-                {/* Subtle background glow effect for that modern feel */}
+                {/* bg glow effect */}
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-32 bg-blue-500/10 blur-3xl rounded-full pointer-events-none" />
 
                 <div className="text-center space-y-2 mb-8 relative z-10">
@@ -59,15 +59,8 @@ const Login = () => {
                         Welcome Back
                     </h1>
                     <p className="text-sm text-slate-500 font-medium">
-                        Log in to manage your tasks.
+                        Enter your credentials to access your account
                     </p>
-                </div>
-
-                <div className="relative flex items-center justify-center mb-8">
-                    <div className="absolute w-full border-t border-slate-100"></div>
-                    <span className="relative bg-white px-4 text-xs font-bold text-slate-300 uppercase tracking-wider">
-                        OR
-                    </span>
                 </div>
 
                 <Form {...form}>
@@ -99,7 +92,7 @@ const Login = () => {
                             render={({ field }) => (
                                 <FormItem>
                                     <FormControl>
-                                        <div className="relative flex items-center">
+                                        <div className="relative flex items-center mb-4">
                                             <Lock className="absolute left-4 w-5 h-5 text-slate-400" />
                                             <Input 
                                                 type="password" 
@@ -114,15 +107,9 @@ const Login = () => {
                             )}
                         />
 
-                        <div className="flex justify-end pt-1">
-                            <a href="#" className="text-sm font-bold text-blue-600 hover:text-blue-700 transition-colors">
-                                Forgot Password?
-                            </a>
-                        </div>
-
                         <Button 
                             type="submit" 
-                            className="w-full h-12 rounded-2xl bg-blue-600 hover:bg-blue-700 text-base font-bold shadow-lg shadow-blue-500/25 transition-all mt-4" 
+                            className="w-full h-12 rounded-2xl bg-blue-600 hover:bg-blue-700 text-base font-bold shadow-lg shadow-blue-500/25 transition-all" 
                             disabled={isSubmitting}
                         >
                             {isSubmitting ? (
@@ -136,7 +123,7 @@ const Login = () => {
                     </form>
                 </Form>
 
-                <div className="mt-8 text-center text-sm font-medium text-slate-500">
+                <div className="mt-6 text-center text-sm font-medium text-slate-500">
                     Don't have an account?{" "}
                     <Link to="/register" className="text-blue-600 font-bold hover:underline">
                         Sign up
