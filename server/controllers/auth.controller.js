@@ -50,7 +50,13 @@ exports.approveUser = async (req, res) => {
 // approved user sets their passwords for acc activation
 exports.setupPassword = async (req, res) => {
     try {
-        const { email, newPassword } = req.body;
+        const { email, newPassword, password } = req.body;
+
+        const passwordToHash = newPassword || password;
+
+        if (!email || !passwordToHash) {
+            return res.status(400).json({ message: 'Email and password are required' });
+        }
 
         const user = await User.findOne({ email });
         if (!user) return res.status(404).json({ message: 'User not found' });
@@ -63,13 +69,14 @@ exports.setupPassword = async (req, res) => {
         }
 
         const salt = await bcrypt.genSalt(10);
-        user.passwordHash = await bcrypt.hash(newPassword, salt);
+        user.passwordHash = await bcrypt.hash(passwordToHash, salt);
         user.accountStatus = 'Active';
         await user.save();
 
         res.status(200).json({ message: 'Password set successfully. You can now login.' });
     } catch (error) {
         res.status(500).json({ message: 'Server error', error: error.message });
+        console.error(error)
     }
 };
 

@@ -18,9 +18,9 @@ import {
 
 const setupSchema = z.object({
     email: z.string().email({ message: "Invalid email address" }),
-    password: z.string().min(6, { message: "Password must be at least 6 characters" }),
+    newPassword: z.string().min(6, { message: "Password must be at least 6 characters" }),
     confirmPassword: z.string()
-}).refine((data) => data.password === data.confirmPassword, {
+}).refine((data) => data.newPassword === data.confirmPassword, {
     message: "Password do not match",
     path: ["confirmPassword"],
 });
@@ -76,11 +76,11 @@ const SetupPassword = () => {
                             <label className="text-sm font-medium leading-none">New Password</label>
                             <Input
                                 type="password"
-                                {...register("password")}
+                                {...register("newPassword")}
                                 placeholder="••••••••"
-                                className={errors.password ? "border-red-500" : ""}
+                                className={errors.newPassword ? "border-red-500" : ""}
                             />
-                            {errors.password && <p className="text-sm font-medium text-red-500">{errors.password.message}</p>}
+                            {errors.newPassword && <p className="text-sm font-medium text-red-500">{errors.newPassword.message}</p>}
                         </div>
 
                         <div className="space-y-2">
@@ -108,5 +108,7 @@ const SetupPassword = () => {
                 </CardFooter>
             </Card>
         </div>
-    )
-}
+    );
+};
+
+export default SetupPassword;
