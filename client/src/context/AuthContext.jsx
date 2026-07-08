@@ -6,7 +6,7 @@ export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const [currentUser, setCurrentUser] = useState(null);
-    const [isloading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(true);
 
     // check if user is laready logged in when the app loads
     useEffect(() => {
@@ -42,13 +42,13 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.provider value={{
+        <AuthContext.Provider value={{
             currentUser,
             login,
             logout,
             isLoading
         }} >
             {children}
-        </AuthContext.provider>
+        </AuthContext.Provider>
     );
 };

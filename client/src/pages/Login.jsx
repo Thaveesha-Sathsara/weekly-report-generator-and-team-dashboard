@@ -13,7 +13,7 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-} from '@base-ui/react/form';
+} from '@/components/ui/form';
 import {
     Card,
     CardHeader,

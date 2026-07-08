@@ -3,9 +3,9 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 // user apply for account
-exports.applyForAccess = async (req, res) => {
+exports.registerRequest = async (req, res) => {
     try {
-        const { fullName, email, role } = req.body;
+        const { fullName, email } = req.body;
         
         const existingUser = await User.findOne({ email });
         if (existinguser) {
@@ -15,7 +15,7 @@ exports.applyForAccess = async (req, res) => {
         const newUser = new User({
             fullName,
             email,
-            role,
+            role: 'Team Member',
             accountStatus: 'Pending'
         });
 
@@ -30,11 +30,15 @@ exports.applyForAccess = async (req, res) => {
 exports.approveUser = async (req, res) => {
     try {
         const { userId } = req.params;
+        const { assignedRole } = req.body;
 
         const user = await User.findById(userId);
         if (!user) return res.status(404).json({ message: 'User not found' });
 
         user.accountStatus = 'Approved';
+        if (!assignedRole) {
+            user.role = assignedRole;
+        }
         await user.save();
 
         res.status(200).json({ message: `User ${user.email} has been approved` });
