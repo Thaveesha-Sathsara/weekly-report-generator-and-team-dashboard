@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button';
 const Members = () => {
     const [users, setUsers] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [activeTab, setActiveTab] = useState('pending');
+    const [activeTab, setActiveTab] = useState('active');
     const [approvalData, setApprovalData] = useState(null); 
 
     const fetchUsers = async () => {
@@ -29,8 +29,8 @@ const Members = () => {
 
     useEffect(() => { fetchUsers(); }, []);
 
-    const pendingUsers = users.filter(u => u.accountStatus === 'Pending');
     const activeUsers = users.filter(u => u.accountStatus !== 'Pending');
+    const pendingUsers = users.filter(u => u.accountStatus === 'Pending');
 
     const handleApprovalRequest = (user, role) => {
         setApprovalData({ user, role });
@@ -87,7 +87,7 @@ const Members = () => {
             <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm animate-in fade-in slide-in-from-bottom-2 duration-300">
                 {activeTab === 'pending' ? (
                     <DataTable 
-                        key="pending-table" // Forces re-render when switching
+                        key="pending-table" // forces re-render when switching
                         columns={getMemberColumns(handleApprovalRequest)} 
                         data={pendingUsers} 
                         title="Needs Approval"

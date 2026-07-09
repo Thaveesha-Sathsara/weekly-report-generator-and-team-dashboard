@@ -27,6 +27,7 @@ export const getTeamReportColumns = (handleView, handleUnlock, handleDelete) => 
         id: "dateRange",
         accessorFn: (row) => `${row.weekStartDate} to ${row.weekEndDate}`,
         header: ({ column }) => <DataTableColumnHeader column={column} title="Week Of" />,
+
         cell: ({ row }) => {
             const start = row.original.weekStartDate ? format(new Date(row.original.weekStartDate), "MMM dd") : "N/A";
             const end = row.original.weekEndDate ? format(new Date(row.original.weekEndDate), "MMM dd, yyyy") : "N/A";
@@ -40,8 +41,8 @@ export const getTeamReportColumns = (handleView, handleUnlock, handleDelete) => 
             const status = row.getValue("status");
             return (
                 <Badge variant="outline" className={`border-0 capitalize font-bold ${
-                    status === 'submitted' ? 'bg-green-100 text-green-700' : 
-                    status === 'late' ? 'bg-red-100 text-red-700' : 'bg-orange-100 text-orange-700'
+                    status === 'submitted' ? 'text-green-700' : 
+                    status === 'late' ? 'text-red-700' : 'text-orange-700'
                 }`}>
                     {status}
                 </Badge>

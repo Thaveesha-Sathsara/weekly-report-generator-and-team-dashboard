@@ -243,7 +243,6 @@ const TeamDashboard = () => {
                 variant="destructive" 
             />
 
-            {/* Added the missing Delete Modal */}
             <ConfirmModal 
                 isOpen={!!reportToDelete} 
                 onClose={() => setReportToDelete(null)}

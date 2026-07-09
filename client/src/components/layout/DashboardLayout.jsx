@@ -12,12 +12,11 @@ const DashboardLayout = () => {
     if (isLoading) return <div className="flex h-screen items-center justify-center bg-slate-50">Loading...</div>;
     if (!currentUser) return <Navigate to="/login" replace />;
 
-    // Helper for active link styles
+    // helper for active link styles
     const isActive = (path) => location.pathname === path;
 
     return (
         <div className="flex h-screen bg-slate-50 text-slate-900">
-            {/* Sidebar - Refined with subtle border and professional spacing */}
             <aside className="w-64 border-r border-slate-200 bg-white flex flex-col shadow-sm z-10">
                 <div className="h-20 flex items-center px-8 border-b border-slate-100">
                     <span className="font-extrabold text-2xl tracking-tight text-slate-900">

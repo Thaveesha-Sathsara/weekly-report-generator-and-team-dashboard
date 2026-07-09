@@ -23,7 +23,29 @@ const ReportView = () => {
         const fetchReport = async () => {
             try {
                 const res = await axiosInstance.get(`/reports/${id}`);
-                setReport(res.data);
+                
+                let processedReport = res.data;
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+
+                if (processedReport.weekEndDate) {
+                    const endDate = new Date(processedReport.weekEndDate);
+                    endDate.setHours(0,0,0,0);
+                    
+                    if (processedReport.status === 'draft' && today > endDate) {
+                        processedReport.status = 'late';
+                    }
+                    
+                    if (processedReport.status === 'submitted' && processedReport.submittedAt) {
+                        const submitDate = new Date(processedReport.submittedAt);
+                        submitDate.setHours(0,0,0,0);
+                        if (submitDate > endDate) {
+                            processedReport.status = 'late';
+                        }
+                    }
+                }
+
+                setReport(processedReport);
             } catch (error) {
                 toast.error("Failed to load report details");
                 navigate('/my-reports');
@@ -63,10 +85,12 @@ const ReportView = () => {
                 </div>
                 
                 <Badge variant="outline" className={`px-4 py-1.5 text-sm font-bold border-0 ${
-                    report.status === 'submitted' ? 'bg-green-100 text-green-700' : 'bg-orange-100 text-orange-700'
+                    report.status === 'submitted' ? 'text-green-700' : report.status === 'late' ? 'text-red-700' : 'text-orange-700'
                 }`}>
                     {report.status === 'submitted' ? (
                         <span className="flex items-center gap-2"><CheckCircle className="w-4 h-4" /> Submitted</span>
+                    ) : report.status === 'late' ? (
+                        <span className="flex items-center gap-2"><AlertTriangle className="w-4 h-4" /> Late</span>
                     ) : (
                         <span className="flex items-center gap-2"><Clock className="w-4 h-4" /> Draft</span>
                     )}
@@ -106,8 +130,8 @@ const ReportView = () => {
                 {/* info of the report */}
                 <div className="space-y-10">
                     <section>
-                        <h3 className="text-sm font-bold text-blue-600 uppercase tracking-wider flex items-center gap-2 mb-4">
-                            <CheckCircle className="w-5 h-5" /> Tasks Completed
+                        <h3 className="text-sm font-bold text-black-600 uppercase tracking-wider flex items-center gap-2 mb-4">
+                            Tasks Completed
                         </h3>
                         <p className="text-slate-700 whitespace-pre-wrap leading-relaxed font-medium">
                             {report.tasksCompleted}
@@ -117,8 +141,8 @@ const ReportView = () => {
                     <Separator className="bg-slate-100" />
 
                     <section>
-                        <h3 className="text-sm font-bold text-blue-600 uppercase tracking-wider flex items-center gap-2 mb-4">
-                            <FileText className="w-5 h-5" /> Tasks Planned for Next Week
+                        <h3 className="text-sm font-bold text-black-600 uppercase tracking-wider flex items-center gap-2 mb-4">
+                            Tasks Planned for Next Week
                         </h3>
                         <p className="text-slate-700 whitespace-pre-wrap leading-relaxed font-medium">
                             {report.tasksPlanned}
@@ -129,11 +153,11 @@ const ReportView = () => {
 
                     {/* bottom of grid */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <section className="bg-red-50/50 p-6 rounded-2xl border border-red-100">
-                            <h3 className="text-sm font-bold text-red-600 uppercase tracking-wider flex items-center gap-2 mb-3">
+                        <section className="bg-slate-50 p-6 rounded-2xl border border-red-100">
+                            <h3 className="text-sm font-bold text-slate-600 uppercase tracking-wider flex items-center gap-2 mb-3">
                                 <AlertTriangle className="w-4 h-4" /> Blockers & Challenges
                             </h3>
-                            <p className="text-red-900/80 font-medium text-sm">
+                            <p className="text-slate-700 font-medium text-sm">
                                 {report.blockers || "No blockers reported for this week."}
                             </p>
                         </section>

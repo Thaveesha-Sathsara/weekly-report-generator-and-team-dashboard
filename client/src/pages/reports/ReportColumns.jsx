@@ -33,16 +33,18 @@ export const getMyReportColumns = (navigate, handleDelete) => [
         header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
         cell: ({ row }) => {
             const status = row.getValue("status") || "draft";
+            const isUnsubmittedLate = status === 'late' && !row.original.submittedAt;
             return (
                 <Badge variant="outline" className={`px-3 py-1.5 border-0 font-bold capitalize ${
-                    status === 'submitted' ? 'bg-green-100 text-green-700' : 
-                    status === 'late' ? 'bg-red-100 text-red-700' : 'bg-orange-100 text-orange-700'
+                    status === 'submitted' ? 'text-green-700' : 
+                    status === 'late' ? 'text-red-700' : 'text-orange-700'
                 }`}>
                     <span className="flex items-center gap-1.5">
                         {status === 'submitted' ? <CheckCircle className="w-3.5 h-3.5" /> : 
                          status === 'late' ? <AlertTriangle className="w-3.5 h-3.5" /> : 
                          <Clock className="w-3.5 h-3.5" />}
-                        {status}
+                        
+                        {isUnsubmittedLate ? 'Late (Draft)' : status}
                     </span>
                 </Badge>
             );
