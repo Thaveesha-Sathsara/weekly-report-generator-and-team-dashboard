@@ -11,6 +11,7 @@ import ProjectView from './pages/projects/ProjectView';
 import ReportForm from './pages/reports/ReportForm';
 import ReportView from './pages/reports/ReportView';
 import Members from './pages/members/Members';
+import DashboardOverview from './pages/DashboardOverview';
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
           <Route path="/my-reports/:id/edit" element={<ReportForm />} />
           <Route path="/my-reports/:id/view" element={<ReportView />} />
           <Route path="/members" element={<Members />} />
+          <Route path="/dashboard-overview" element={<DashboardOverview />} />
         </Route>
       </Routes>
       <Toaster richColors position="top-right" />

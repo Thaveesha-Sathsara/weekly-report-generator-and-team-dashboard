@@ -5,7 +5,7 @@ import * as z from 'zod';
 import { useNavigate, useParams } from 'react-router-dom';
 import axiosInstance from '@/services/axiosInstance';
 import { toast } from 'sonner';
-import { format } from 'date-fns';
+import { format, addDays } from 'date-fns';
 import { CalendarIcon, ArrowLeft } from 'lucide-react';
 import { cn } from '@/lib/utils'; // Assumes you have Shadcn's util file
 
@@ -132,7 +132,17 @@ const ReportForm = () => {
                                             </FormControl>
                                         </PopoverTrigger>
                                         <PopoverContent className="w-auto p-0" align="start">
-                                            <Calendar mode="single" selected={field.value} onSelect={field.onChange} initialFocus />
+                                            <Calendar
+                                                mode="single"
+                                                selected={field.value}
+                                                onSelect={(date) => {
+                                                    field.onChange(date);
+                                                    if (date) {
+                                                        form.setValue('weekEndDate', addDays(date, 6), { shouldValidate: true });
+                                                    }
+                                                }}
+                                                initialFocus
+                                            />
                                         </PopoverContent>
                                     </Popover>
                                     <FormMessage />
@@ -145,14 +155,14 @@ const ReportForm = () => {
                                     <Popover>
                                         <PopoverTrigger asChild>
                                             <FormControl>
-                                                <Button variant={"outline"} className={cn("h-12 w-full rounded-xl bg-slate-50 justify-start text-left font-medium", !field.value && "text-muted-foreground")}>
+                                                <Button variant={"outline"}  disabled={true} className={cn("h-12 w-full rounded-xl bg-slate-50 justify-start text-left font-medium", !field.value && "text-muted-foreground")}>
                                                     <CalendarIcon className="mr-3 h-4 w-4 opacity-50" />
                                                     {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
                                                 </Button>
                                             </FormControl>
                                         </PopoverTrigger>
                                         <PopoverContent className="w-auto p-0" align="start">
-                                            <Calendar mode="single" selected={field.value} onSelect={field.onChange} initialFocus />
+                                            <Calendar mode="single" selected={field.value}  disabled={true} onSelect={field.onChange} initialFocus />
                                         </PopoverContent>
                                     </Popover>
                                     <FormMessage />
