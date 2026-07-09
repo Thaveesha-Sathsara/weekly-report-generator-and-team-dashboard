@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '@/services/axiosInstance';
@@ -16,12 +16,19 @@ const Projects = () => {
     const [projects, setProjects] = useState([]);
     const [users, setUsers] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [searchQuery, setSearchQuery] = useState('');
     
     const [isCreateOpen, setIsCreateOpen] = useState(false);
     const [editingProject, setEditingProject] = useState(null);
     const [projectToDelete, setProjectToDelete] = useState(null); 
     
     const { register, handleSubmit, reset, setValue } = useForm();
+
+    const filteredUsers = useMemo(() => {
+        return users.filter(user =>
+            user.fullName.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+    }, [users, searchQuery])
 
     const fetchData = async () => {
         setIsLoading(true);
@@ -99,7 +106,7 @@ const Projects = () => {
                 </Button>
 
                 <Dialog open={isCreateOpen} onOpenChange={(open) => { 
-                    if (!open) { setEditingProject(null); reset(); } 
+                    if (!open) { setEditingProject(null); reset(); setSearchQuery('');  } 
                     setIsCreateOpen(open); 
                 }}>
                     <DialogContent className="sm:max-w-md rounded-3xl bg-white p-8 border shadow-2xl">
@@ -124,8 +131,15 @@ const Projects = () => {
                             {/* team member assign part */}
                             <div className="space-y-2">
                                 <label className="text-sm font-bold text-slate-700">Assign Team Members</label>
+                                <Input
+                                    placeholder="Search by name..."
+                                    className="rounded-xl h-9 mb-2 text-sm bg-slate-50"
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                />
+
                                 <div className="max-h-40 overflow-y-auto border rounded-xl p-3 bg-slate-50 space-y-2">
-                                    {users.map(user => (
+                                    {filteredUsers.map(user => (
                                         <label key={user._id} className="flex items-center space-x-3 cursor-pointer p-1 hover:bg-white rounded-lg transition-colors">
                                             <input 
                                                 type="checkbox" 
@@ -139,6 +153,9 @@ const Projects = () => {
                                             </div>
                                         </label>
                                     ))}
+                                    {filteredUsers.length === 0 && (
+                                        <p className="text-center text-xs text-slate-400 py-2">No members found.</p>
+                                    )}
                                 </div>
                             </div>
 
