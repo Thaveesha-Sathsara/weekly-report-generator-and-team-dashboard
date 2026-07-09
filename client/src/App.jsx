@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/sonner";
 import Login from './pages/Login';
 import Register from './pages/Register'; 
 import DashboardLayout from './components/layout/DashboardLayout';
-import TeamDashboard from './pages/TeamDashboard';
+import TeamDashboard from './pages/team-dashboard/TeamDashboard';
 import SetupPassword from './pages/SetupPassword';
 import Projects from './pages/projects/Projects';
 import MyReports from './pages/reports/MyReports';
