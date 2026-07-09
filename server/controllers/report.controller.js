@@ -102,3 +102,22 @@ exports.unlockReport = async (req, res) => {
         res.status(500).json({ message: 'Server error', error: error.message });
     }
 };
+
+exports.getReportById = async (req, res) => {
+    try {
+        const report = await Report.findById(req.params.id).populate('projectId', 'name')
+
+        if (!report) {
+            return res.status(404).json({ message: 'Report not found' });
+        }
+
+        // only the owner or a manager can view the report
+        if (report.userId.toString() !== req.user.id && req.user.role !== 'Manager') {
+            return res.status(403).json({ message: 'Not authorized to view this report' });
+        }
+
+        res.status(200).json(report);
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
