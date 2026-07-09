@@ -36,8 +36,8 @@ const DashboardLayout = () => {
                     {currentUser.role === 'Manager' && (
                         <>
                             <div className="pt-6 pb-2 px-4 text-[11px] font-bold text-slate-400 uppercase tracking-widest">Management</div>
-                            <Link to="/dashboard-overview">
-                                <Button variant={isActive('/dashboard') ? "secondary" : "ghost"} className="w-full justify-start gap-3 h-11 rounded-xl text-base font-medium">
+                            <Link to="/dashboard">
+                                <Button variant={isActive('/dashboard-overview') ? "secondary" : "ghost"} className="w-full justify-start gap-3 h-11 rounded-xl text-base font-medium">
                                     <Activity className="h-5 w-5" />
                                     Dashboard Overview
                                 </Button>
