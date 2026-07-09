@@ -54,7 +54,7 @@ const ReportForm = () => {
                     const rRes = await axiosInstance.get(`/reports/${id}`);
                     const data = rRes.data;
                     form.reset({
-                        projectId: data.projectId._id || data.projectId,
+                        projectId: data.projectId?._id || data.projectId,
                         weekStartDate: new Date(data.weekStartDate),
                         weekEndDate: new Date(data.weekEndDate),
                         tasksCompleted: data.tasksCompleted,
@@ -123,13 +123,14 @@ const ReportForm = () => {
                                 <FormItem className="flex flex-col">
                                     <FormLabel className="text-slate-700 font-bold uppercase text-xs tracking-wider mb-2">Week Start</FormLabel>
                                     <Popover>
-                                        <PopoverTrigger asChild>
-                                            <FormControl>
-                                                <Button variant={"outline"} className={cn("h-12 w-full rounded-xl bg-slate-50 justify-start text-left font-medium", !field.value && "text-muted-foreground")}>
-                                                    <CalendarIcon className="mr-3 h-4 w-4 opacity-50" />
-                                                    {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
-                                                </Button>
-                                            </FormControl>
+                                        <PopoverTrigger className="w-full outline-none">
+                                            <div className={cn(
+                                                "flex h-12 w-full items-center rounded-xl border border-slate-200 bg-slate-50 px-4 text-left font-medium transition-colors hover:bg-slate-100 cursor-pointer",
+                                                !field.value && "text-slate-500"
+                                            )}>
+                                                <CalendarIcon className="mr-3 h-4 w-4 opacity-50 text-slate-500" />
+                                                {field.value ? format(field.value, "PPP") : <span>Pick a start date</span>}
+                                            </div>
                                         </PopoverTrigger>
                                         <PopoverContent className="w-auto p-0" align="start">
                                             <Calendar

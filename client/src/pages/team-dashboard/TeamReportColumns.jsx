@@ -1,10 +1,16 @@
 import { Button } from "@/components/ui/button";
-import { Eye, Unlock } from "lucide-react";
+import { Eye, Unlock, Trash2, MoreHorizontal } from "lucide-react";
 import { format } from "date-fns";
 import DataTableColumnHeader from "@/components/DataTableColumnHeader";
 import { Badge } from "@/components/ui/badge";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
-export const getTeamReportColumns = (handleView, handleUnlock) => [
+export const getTeamReportColumns = (handleView, handleUnlock, handleDelete) => [
     {
         accessorKey: "employee",
         accessorFn: (row) => row.userId?.fullName || "Unknown",
@@ -33,7 +39,7 @@ export const getTeamReportColumns = (handleView, handleUnlock) => [
         cell: ({ row }) => {
             const status = row.getValue("status");
             return (
-                <Badge variant="outline" className={`border-0 capitalize ${
+                <Badge variant="outline" className={`border-0 capitalize font-bold ${
                     status === 'submitted' ? 'bg-green-100 text-green-700' : 
                     status === 'late' ? 'bg-red-100 text-red-700' : 'bg-orange-100 text-orange-700'
                 }`}>
@@ -47,16 +53,27 @@ export const getTeamReportColumns = (handleView, handleUnlock) => [
         cell: ({ row }) => {
             const report = row.original;
             return (
-                <div className="flex justify-end gap-2">
-                    <Button variant="ghost" size="sm" onClick={() => handleView(report._id)} className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-lg">
-                        <Eye className="w-4 h-4 mr-2" /> View
-                    </Button>
-                    {report.status === 'submitted' && (
-                        <Button variant="ghost" size="sm" onClick={() => handleUnlock(report._id)} className="text-slate-500 hover:text-orange-600 hover:bg-orange-50 rounded-lg">
-                            <Unlock className="w-4 h-4 mr-2" /> Unlock
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" className="h-8 w-8 p-0 hover:bg-slate-100">
+                            <span className="sr-only">Open menu</span>
+                            <MoreHorizontal className="h-4 w-4 text-slate-500" />
                         </Button>
-                    )}
-                </div>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="rounded-xl border-slate-200">
+                        <DropdownMenuItem onClick={() => handleView(report._id)} className="cursor-pointer font-medium">
+                            <Eye className="w-4 h-4 mr-2 text-blue-600" /> View Details
+                        </DropdownMenuItem>
+                        {(report.status === 'submitted' || report.status === 'late') && (
+                            <DropdownMenuItem onClick={() => handleUnlock(report._id)} className="cursor-pointer font-medium">
+                                <Unlock className="w-4 h-4 mr-2 text-orange-600" /> Unlock to Draft
+                            </DropdownMenuItem>
+                        )}
+                        <DropdownMenuItem onClick={() => handleDelete(report._id)} className="cursor-pointer font-medium text-red-600 focus:text-red-700 focus:bg-red-50">
+                            <Trash2 className="w-4 h-4 mr-2" /> Delete Report
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
             );
         },
     },
