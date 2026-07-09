@@ -37,7 +37,7 @@ const ProjectView = () => {
     return (
         <div className="max-w-4xl mx-auto space-y-6 pb-12">
             <div className="flex items-center gap-4 mb-8">
-                <Button variant="ghost" size="icon" onClick={() => navigate('/projects')} className="rounded-full bg-white border border-slate-200 hover:bg-slate-100">
+                <Button variant="ghost" size="icon" onClick={() => navigate('/projects')} className="rounded-full bg-white border border-gray-200 hover:bg-slate-100">
                     <ArrowLeft className="w-5 h-5 text-slate-600" />
                 </Button>
                 <div>
@@ -46,7 +46,7 @@ const ProjectView = () => {
                 </div>
             </div>
 
-            <Card className="rounded-3xl border border-slate-200 shadow-xl shadow-slate-200/40 bg-white overflow-hidden p-8 sm:p-12">
+            <Card className="rounded-3xl border border-gray-200 shadow-xl shadow-slate-200/40 bg-white overflow-hidden p-8 sm:p-12">
                 
                 {/* Project Header Info */}
                 <div className="flex items-start justify-between mb-8">
@@ -63,7 +63,7 @@ const ProjectView = () => {
                 <Separator className="bg-slate-100 mb-8" />
 
                 {/* meta info */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10 p-6 bg-slate-50 rounded-2xl border border-slate-100">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10 p-6 bg-slate-50 rounded-2xl border border-gray-100">
                     <div>
                         <p className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2 flex items-center gap-2">
                             <Calendar className="w-3.5 h-3.5" /> Created On
@@ -91,7 +91,7 @@ const ProjectView = () => {
                     {project.teamMembers && project.teamMembers.length > 0 ? (
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             {project.teamMembers.map(member => (
-                                <div key={member._id} className="flex items-center gap-4 p-4 rounded-xl border border-slate-200 bg-white shadow-sm">
+                                <div key={member._id} className="flex items-center gap-4 p-4 rounded-xl border border-gray-200 bg-white shadow-sm">
                                     <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold border border-blue-200">
                                         {member.fullName.charAt(0)}
                                     </div>
@@ -103,7 +103,7 @@ const ProjectView = () => {
                             ))}
                         </div>
                     ) : (
-                        <div className="p-8 text-center border border-dashed border-slate-200 rounded-2xl bg-slate-50">
+                        <div className="p-8 text-center border border-dashed border-gray-200 rounded-2xl bg-slate-50">
                             <p className="text-sm font-medium text-slate-500">No team members have been assigned to this project yet.</p>
                         </div>
                     )}

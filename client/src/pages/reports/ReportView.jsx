@@ -51,7 +51,7 @@ const ReportView = () => {
             {/* header */}
             <div className="flex items-center justify-between mb-8">
                 <div className="flex items-center gap-4">
-                    <Button variant="ghost" size="icon" onClick={() => navigate('/my-reports')} className="rounded-full bg-white border border-slate-200 hover:bg-slate-100">
+                    <Button variant="ghost" size="icon" onClick={() => navigate('/my-reports')} className="rounded-full bg-white border border-gray-200 hover:bg-slate-100">
                         <ArrowLeft className="w-5 h-5 text-slate-600" />
                     </Button>
                     <div>

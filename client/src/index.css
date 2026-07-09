@@ -13,3 +13,21 @@
     @apply font-sans antialiased bg-slate-50 text-slate-900;
   }
 }
+
+/* Remove default browser focus rings from all Recharts components */
+.recharts-wrapper,
+.recharts-surface,
+.recharts-responsive-container {
+    outline: none !important;
+}
+
+/* Optional: Remove the highlight when clicking specific chart elements */
+.recharts-cartesian-grid,
+.recharts-bar-rectangle,
+.recharts-line-dots {
+    outline: none !important;
+}
+
+.recharts-wrapper *:focus {
+    outline: none !important;
+}

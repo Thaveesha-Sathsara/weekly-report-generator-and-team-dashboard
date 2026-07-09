@@ -84,7 +84,7 @@ const Register = () => {
                                             <FormControl>
                                                 <div className="relative flex items-center">
                                                     <User className="absolute left-4 w-5 h-5 text-slate-400" />
-                                                    <Input placeholder="Full Name" className="pl-11 h-12 rounded-2xl border-slate-200 bg-slate-50/50 focus-visible:bg-white focus-visible:ring-blue-500 text-base" {...field} />
+                                                    <Input placeholder="Full Name" className="pl-11 h-12 rounded-2xl border-slate-200 bg-slate-50/50 focus-visible:bg-white text-base" {...field} />
                                                 </div>
                                             </FormControl>
                                             <FormMessage className="ml-1" />
@@ -99,7 +99,7 @@ const Register = () => {
                                             <FormControl>
                                                 <div className="relative flex items-center">
                                                     <Mail className="absolute left-4 w-5 h-5 text-slate-400" />
-                                                    <Input placeholder="Email Address" className="pl-11 h-12 rounded-2xl border-slate-200 bg-slate-50/50 focus-visible:bg-white focus-visible:ring-blue-500 text-base" {...field} />
+                                                    <Input placeholder="Email Address" className="pl-11 h-12 rounded-2xl border-slate-200 bg-slate-50/50 focus-visible:bg-white text-base" {...field} />
                                                 </div>
                                             </FormControl>
                                             <FormMessage className="ml-1" />

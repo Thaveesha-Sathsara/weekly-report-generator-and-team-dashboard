@@ -31,29 +31,25 @@ const DashboardOverview = () => {
         fetchReports();
     }, []);
 
-    // --- REAL-TIME DATA CALCULATIONS ---
     const { kpis, trendData, projectData, complianceData, recentActivity } = useMemo(() => {
         if (!reports.length) return { kpis: {}, trendData: [], projectData: [], complianceData: [], recentActivity: [] };
 
-        // 1. Calculate KPIs
+        // calculate KPIs
         const totalSubmissions = reports.filter(r => r.status === 'submitted').length;
         const complianceRate = Math.round((totalSubmissions / reports.length) * 100) || 0;
         const openBlockers = reports.filter(r => r.blockers && r.blockers.trim() !== '').length;
 
-        // 2. Trend Data (Group by Week Start Date)
         const trendMap = {};
         reports.forEach(r => {
             if (!r.weekStartDate) return;
             const dateStr = format(new Date(r.weekStartDate), 'MMM dd');
             trendMap[dateStr] = (trendMap[dateStr] || 0) + 1;
         });
-        // Convert to array and sort chronologically (assuming keys are somewhat ordered, or just display as is for now)
         const trend = Object.keys(trendMap).slice(-7).map(date => ({
             name: date,
             reports: trendMap[date]
         }));
 
-        // 3. Workload by Project
         const projMap = {};
         reports.forEach(r => {
             const projName = r.projectId?.name || 'Unknown Project';
@@ -64,7 +60,7 @@ const DashboardOverview = () => {
             reports: projMap[name]
         }));
 
-        // 4. Compliance (Pie Chart)
+        // 4pie chart
         let sub = 0, drft = 0, lt = 0;
         reports.forEach(r => {
             if (r.status === 'submitted') sub++;
@@ -77,7 +73,7 @@ const DashboardOverview = () => {
             { name: 'Late', value: lt, color: '#dc2626' },
         ];
 
-        // 5. Recent Activity Feed (Top 5 most recently updated reports)
+        // recent activity feed
         const activity = reports.slice(0, 5).map(r => ({
             id: r._id,
             user: r.userId?.fullName || 'Unknown User',
@@ -103,13 +99,13 @@ const DashboardOverview = () => {
     return (
         <div className="max-w-7xl mx-auto space-y-6 pb-12">
             <div className="mb-8">
-                <h1 className="text-3xl font-extrabold text-slate-900">Executive Overview</h1>
+                <h1 className="text-3xl font-extrabold text-slate-900">Dashboard Overview</h1>
                 <p className="text-sm font-medium text-slate-500 mt-1">Real-time metrics and team performance.</p>
             </div>
 
             {/* Top KPI Metrics Row */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <Card className="rounded-3xl border border-slate-200 shadow-sm bg-white p-6">
+                <Card className="rounded-3xl border border-blue-200 shadow-sm bg-white p-6">
                     <div className="flex justify-between items-start">
                         <div>
                             <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Total Submissions</p>

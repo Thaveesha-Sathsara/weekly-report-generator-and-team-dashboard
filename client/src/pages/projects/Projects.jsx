@@ -102,7 +102,7 @@ const Projects = () => {
                     if (!open) { setEditingProject(null); reset(); } 
                     setIsCreateOpen(open); 
                 }}>
-                    <DialogContent className="sm:max-w-md rounded-3xl bg-white p-8 border border-slate-200 shadow-2xl">
+                    <DialogContent className="sm:max-w-md rounded-3xl bg-white p-8 border shadow-2xl">
                         <DialogHeader className="mb-4">
                             <DialogTitle className="text-xl font-bold text-slate-900">
                                 {editingProject ? 'Edit Project' : 'Create New Project'}
@@ -124,14 +124,14 @@ const Projects = () => {
                             {/* team member assign part */}
                             <div className="space-y-2">
                                 <label className="text-sm font-bold text-slate-700">Assign Team Members</label>
-                                <div className="max-h-40 overflow-y-auto border border-slate-200 rounded-xl p-3 bg-slate-50 space-y-2">
+                                <div className="max-h-40 overflow-y-auto border rounded-xl p-3 bg-slate-50 space-y-2">
                                     {users.map(user => (
                                         <label key={user._id} className="flex items-center space-x-3 cursor-pointer p-1 hover:bg-white rounded-lg transition-colors">
                                             <input 
                                                 type="checkbox" 
                                                 value={user._id} 
                                                 {...register("teamMembers")} 
-                                                className="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500"
+                                                className="w-4 h-4 text-blue-600 rounded"
                                             />
                                             <div className="flex flex-col">
                                                 <span className="text-sm font-bold text-slate-900 leading-none">{user.fullName}</span>
@@ -158,7 +158,6 @@ const Projects = () => {
                         (id) => setProjectToDelete(id) 
                     )} 
                     data={projects} 
-                    title="Active Projects"
                     isLoading={isLoading}
                 />
             </div>

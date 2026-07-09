@@ -76,7 +76,7 @@ const Login = () => {
                                             <Mail className="absolute left-4 w-5 h-5 text-slate-400" />
                                             <Input 
                                                 placeholder="Email Address" 
-                                                className="pl-11 h-12 rounded-2xl border-slate-200 bg-slate-50/50 focus-visible:bg-white focus-visible:ring-blue-500 text-base" 
+                                                className="pl-11 h-12 rounded-2xl border-slate-200 bg-slate-50/50 focus-visible:bg-white text-base" 
                                                 {...field} 
                                             />
                                         </div>
@@ -97,7 +97,7 @@ const Login = () => {
                                             <Input 
                                                 type="password" 
                                                 placeholder="Password" 
-                                                className="pl-11 h-12 rounded-2xl border-slate-200 bg-slate-50/50 focus-visible:bg-white focus-visible:ring-blue-500 text-base"
+                                                className="pl-11 h-12 rounded-2xl border-slate-200 bg-slate-50/50 focus-visible:bg-white text-base"
                                                 {...field} 
                                             />
                                         </div>
@@ -124,10 +124,19 @@ const Login = () => {
                 </Form>
 
                 <div className="mt-6 text-center text-sm font-medium text-slate-500">
-                    Don't have an account?{" "}
-                    <Link to="/register" className="text-blue-600 font-bold hover:underline">
-                        Sign up
-                    </Link>
+                    <div>
+                        Don't have an account?{" "}
+                        <Link to="/register" className="text-blue-600 font-bold hover:underline">
+                            Sign up
+                        </Link>
+                    </div>
+                    <div className="mt-4 text-xs"
+                    >
+                        Approved by a manager?{" "}
+                        <Link to="/setup-password" className="text-blue-600 font-bold hover:underline">
+                            Activate Account
+                        </Link>
+                    </div>
                 </div>
             </div>
         </div>
