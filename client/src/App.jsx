@@ -6,7 +6,8 @@ import DashboardLayout from './components/layout/DashboardLayout';
 import TeamDashboard from './pages/TeamDashboard';
 import SetupPassword from './pages/SetupPassword';
 import Projects from './pages/projects/Projects';
-import MyReports from './pages/MyReports';
+import MyReports from './pages/reports/MyReports';
+import ReportForm from './pages/reports/ReportForm';
 
 function App() {
   return (
@@ -22,6 +23,9 @@ function App() {
           <Route path="/team" element={<TeamDashboard />} />
           <Route path="/projects" element={<Projects />} />
           <Route path="/my-reports" element={<MyReports />} />
+          <Route path="/my-reports/create" element={<ReportForm />} />
+          <Route path="/my-reports/:id/edit" element={<ReportForm />} />
+          <Route path="/my-reports/view/:id" element={<ReportForm isViewMode={true} />} />
         </Route>
       </Routes>
       <Toaster richColors position="top-right" />

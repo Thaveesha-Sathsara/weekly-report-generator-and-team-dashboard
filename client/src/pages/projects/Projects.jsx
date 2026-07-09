@@ -5,15 +5,19 @@ import { toast } from 'sonner';
 import { Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import DataTable from '@/components/DataTable';
 import { getProjectColumns } from './ProjectColumns';
+import ConfirmModal from '@/components/ConfirmModal';
 
 const Projects = () => {
     const [projects, setProjects] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [isOpen, setIsOpen] = useState(false);
-    const [editingProject, setEditingProject] = useState(null); // Tracks if we are editing
+
+    const [isCreateOpen, setIsCreateOpen] = useState(false);
+    const [editingProject, setEditingProject] = useState(null);
+    const [projectToDelete, setProjectToDelete] = useState(null);
+    
     const { register, handleSubmit, reset, setValue } = useForm();
 
     const fetchProjects = async () => {
@@ -21,18 +25,20 @@ const Projects = () => {
         try {
             const res = await axiosInstance.get('/projects');
             setProjects(res.data);
-        } catch (error) { toast.error("Failed to load projects"); }
+        } catch (error) {
+            toast.error("Failed to load projects");
+            console.error(error);
+        }
         finally { setIsLoading(false); }
     };
 
     useEffect(() => { fetchProjects(); }, []);
 
-    // When modal opens for edit, fill the form
     const openEditModal = (project) => {
         setEditingProject(project);
         setValue("name", project.name);
         setValue("description", project.description);
-        setIsOpen(true);
+        setIsCreateOpen(true);
     };
 
     const onSubmit = async (data) => {
@@ -46,49 +52,94 @@ const Projects = () => {
             }
             reset();
             setEditingProject(null);
-            setIsOpen(false);
+            setIsCreateOpen(false);
             fetchProjects();
-        } catch (error) { toast.error("Operation failed"); }
+        } catch (error) {
+            toast.error("Operation failed");
+            console.error(error);
+        }
     };
 
-    const handleDelete = async (id) => {
-        if (!confirm("Are you sure you want to delete this project?")) return;
+    const executeDelete = async () => {
+        if (!projectToDelete) return;
         try {
-            await axiosInstance.delete(`/projects/${id}`);
-            toast.success("Project deleted");
+            await axiosInstance.delete(`/projects/${projectToDelete}`);
+            toast.success("Project deleted successfully");
+            setProjectToDelete(null); // Close the confirm modal
             fetchProjects();
-        } catch (error) { toast.error("Delete failed"); }
+        } catch (error) {
+            toast.error("Delete failed");
+            console.error(error);
+        }
     };
 
     return (
         <div className="space-y-6">
             <div className="flex justify-between items-center">
                 <h1 className="text-2xl font-bold text-slate-900">Manage Projects</h1>
-                <Dialog open={isOpen} onOpenChange={(open) => { 
+                
+                <Button 
+                    className="rounded-xl bg-blue-600 hover:bg-blue-700 gap-2" 
+                    onClick={() => {
+                        reset();
+                        setEditingProject(null);
+                        setIsCreateOpen(true);
+                    }}
+                >
+                    <Plus className="w-4 h-4" /> Add Project
+                </Button>
+
+                <Dialog open={isCreateOpen} onOpenChange={(open) => { 
                     if (!open) { setEditingProject(null); reset(); } 
-                    setIsOpen(open); 
+                    setIsCreateOpen(open); 
                 }}>
-                    <DialogTrigger asChild>
-                        <Button className="rounded-xl bg-blue-600 gap-2"><Plus className="w-4" /> Add Project</Button>
-                    </DialogTrigger>
-                    <DialogContent className="rounded-3xl p-8">
-                        <DialogHeader>
-                            <DialogTitle>{editingProject ? 'Edit Project' : 'Create New Project'}</DialogTitle>
+                    <DialogContent className="sm:max-w-md rounded-3xl bg-white p-8 border border-slate-200 shadow-2xl">
+                        <DialogHeader className="mb-4">
+                            <DialogTitle className="text-xl font-bold text-slate-900">
+                                {editingProject ? 'Edit Project' : 'Create New Project'}
+                            </DialogTitle>
+                            <DialogDescription className="text-slate-500">
+                                {editingProject ? 'Update the details for this project below.' : 'Add a new project to the portal.'}
+                            </DialogDescription>
                         </DialogHeader>
                         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 pt-4">
-                            <Input placeholder="Name" className="rounded-xl" {...register("name", { required: true })} />
-                            <Input placeholder="Description" className="rounded-xl" {...register("description")} />
-                            <Button type="submit" className="w-full rounded-xl bg-blue-600">{editingProject ? 'Save Changes' : 'Create'}</Button>
+                            <div className="space-y-2">
+                                <label className="text-sm font-medium text-slate-700">Project Name</label>
+                                <Input placeholder="e.g. Q3 Rebrand" className="rounded-xl bg-slate-50" {...register("name", { required: true })} />
+                            </div>
+                            <div className="space-y-2">
+                                <label className="text-sm font-medium text-slate-700">Description</label>
+                                <Input placeholder="Brief overview" className="rounded-xl bg-slate-50" {...register("description")} />
+                            </div>
+                            <Button type="submit" className="w-full rounded-xl bg-blue-600 hover:bg-blue-700 font-bold">
+                                {editingProject ? 'Save Changes' : 'Create Project'}
+                            </Button>
                         </form>
                     </DialogContent>
                 </Dialog>
             </div>
 
-            <DataTable 
-                columns={getProjectColumns(openEditModal, handleDelete)} 
-                data={projects} 
-                title="Active Projects"
-                isLoading={isLoading}
+            {/* datatable container */}
+            <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
+                <DataTable 
+                    columns={getProjectColumns(
+                        openEditModal, 
+                        (id) => setProjectToDelete(id)
+                    )} 
+                    data={projects} 
+                    title="Active Projects"
+                    isLoading={isLoading}
+                />
+            </div>
+
+            <ConfirmModal 
+                isOpen={!!projectToDelete} 
+                onClose={() => setProjectToDelete(null)}
+                onConfirm={executeDelete}
+                title="Delete Project?"
+                description="Are you sure you want to permanently delete this project? This action cannot be undone and will remove it from all associated weekly reports."
+                confirmText="Yes, Delete Project"
+                variant="destructive"
             />
         </div>
     );

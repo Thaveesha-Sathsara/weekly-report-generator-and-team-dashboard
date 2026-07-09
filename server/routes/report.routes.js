@@ -11,7 +11,7 @@ const { protect, managerOnly } = require('../middleware/auth.middleware');
 
 router.get('/me', protect, getMyReports);
 router.post('/', protect, createReport);
-router.put('/:id', protect, updateReport);
+router.put('/:id/edit', protect, updateReport);
 router.get('/', protect, managerOnly, getAllReports);
 router.put('/:id/unlock', protect, managerOnly, unlockReport);
 
