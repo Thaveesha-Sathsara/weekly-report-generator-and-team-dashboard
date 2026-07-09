@@ -16,5 +16,5 @@ router.post('/login', login);
 
 router.get('/pending-users', protect, managerOnly, getPendingUsers);
 router.put('/approve/:userId', protect, managerOnly, approveUser);
-router.get('/all-users', protect, managerOnly, getAllUsers);
+router.get('/users', protect, managerOnly, getAllUsers);
 module.exports = router;

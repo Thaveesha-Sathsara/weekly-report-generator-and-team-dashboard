@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { Navigate, Outlet, Link, useLocation } from "react-router-dom";
 import { AuthContext } from "@/context/AuthContext";
-import { LayoutDashboard, FileText, LogOut, FolderKanban, Settings } from "lucide-react";
+import { LayoutDashboard, FileText, LogOut, FolderKanban, Settings, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const DashboardLayout = () => {
@@ -45,6 +45,12 @@ const DashboardLayout = () => {
                                 <Button variant={isActive('/projects') ? "secondary" : "ghost"} className="w-full justify-start gap-3 h-11 rounded-xl text-base font-medium">
                                     <FolderKanban className="h-5 w-5" />
                                     Manage Projects
+                                </Button>
+                            </Link>
+                            <Link to="/members">
+                                <Button variant={isActive('/members') ? "secondary" : "ghost"} className="w-full justify-start gap-3 h-11 rounded-xl text-base font-medium">
+                                    <Users className="h-5 w-5" />
+                                    User Directory
                                 </Button>
                             </Link>
                         </>

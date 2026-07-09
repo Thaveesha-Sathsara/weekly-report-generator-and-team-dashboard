@@ -9,6 +9,7 @@ import Projects from './pages/projects/Projects';
 import MyReports from './pages/reports/MyReports';
 import ReportForm from './pages/reports/ReportForm';
 import ReportView from './pages/reports/ReportView';
+import Members from './pages/members/Members';
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
           <Route path="/my-reports/create" element={<ReportForm />} />
           <Route path="/my-reports/:id/edit" element={<ReportForm />} />
           <Route path="/my-reports/:id/view" element={<ReportView />} />
+          <Route path="/members" element={<Members />} />
         </Route>
       </Routes>
       <Toaster richColors position="top-right" />

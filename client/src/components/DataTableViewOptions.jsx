@@ -8,22 +8,17 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Settings2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { SlidersHorizontal } from "lucide-react";
 
 const DataTableViewOptions = ({ table }) => {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant="outline"
-          size="sm"
-          className="ml-auto hidden h-8 lg:flex bg-transparent dark:text-white"
-        >
-          <Settings2 />
-          View
-        </Button>
-      </DropdownMenuTrigger>
+      <DropdownMenuTrigger className="ml-auto hidden h-8 lg:flex items-center justify-center rounded-md border border-slate-200 bg-white px-3 text-sm font-medium shadow-sm hover:bg-slate-100 transition-colors">
+          <div className="flex items-center">
+            <SlidersHorizontal className="mr-2 h-4 w-4" />
+            View
+          </div>
+        </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[150px]">
         <DropdownMenuLabel>Toggle columns</DropdownMenuLabel>
         <DropdownMenuSeparator />
