@@ -22,7 +22,7 @@ export const getMemberColumns = (handleApprove) => [
             return (
                 <Badge variant="outline" className={`border-0 ${
                     role === 'Manager' ? 'bg-purple-100 text-purple-700' : 
-                    role === 'Team Member' ? 'bg-blue-100 text-blue-700' : 'bg-orange-100 text-orange-700'
+                    'bg-blue-100 text-blue-700'
                 }`}>
                     {role}
                 </Badge>
@@ -30,13 +30,32 @@ export const getMemberColumns = (handleApprove) => [
         },
     },
     {
+        // NEW: Let's actually show the Account Status so the manager knows if they set up their password yet!
+        accessorKey: "accountStatus",
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
+        cell: ({ row }) => {
+            const status = row.getValue("accountStatus");
+            return (
+                <Badge variant="outline" className={`border-0 ${
+                    status === 'Active' ? 'bg-green-100 text-green-700' : 
+                    status === 'Approved' ? 'bg-yellow-100 text-yellow-700' : 
+                    'bg-slate-100 text-slate-700'
+                }`}>
+                    {status}
+                </Badge>
+            );
+        }
+    },
+    {
         id: "actions",
         header: () => <div className="text-right">Actions</div>,
         cell: ({ row }) => {
             const user = row.original;
             
-            // only show action buttons if the user is Pending
-            if (user.role !== 'Pending') return <div className="text-right text-slate-400 text-xs font-medium">Active</div>;
+            // THE FIX: Only show action buttons if the user's ACCOUNT STATUS is Pending
+            if (user.accountStatus !== 'Pending') {
+                 return <div className="text-right text-slate-400 text-xs font-medium">Action Complete</div>;
+            }
 
             return (
                 <div className="flex justify-end gap-2">
