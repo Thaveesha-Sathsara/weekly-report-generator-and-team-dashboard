@@ -1,7 +1,8 @@
-import { CheckCircle, Clock, Eye, Edit, MoreHorizontal, Trash2 } from "lucide-react";
+import { CheckCircle, Clock, Eye, Edit, MoreHorizontal, Trash2, AlertTriangle } from "lucide-react";
 import { format } from "date-fns";
 import DataTableColumnHeader from "@/components/DataTableColumnHeader";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button"; // Make sure Button is imported!
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -31,14 +32,17 @@ export const getMyReportColumns = (navigate, handleDelete) => [
         accessorKey: "status",
         header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
         cell: ({ row }) => {
-            const status = row.getValue("status");
+            const status = row.getValue("status") || "draft";
             return (
-                <Badge variant="outline" className={`px-3 py-1.5 border-0 font-bold ${
-                    status === 'submitted' ? 'bg-green-100 text-green-700' : 'bg-orange-100 text-orange-700'
+                <Badge variant="outline" className={`px-3 py-1.5 border-0 font-bold capitalize ${
+                    status === 'submitted' ? 'bg-green-100 text-green-700' : 
+                    status === 'late' ? 'bg-red-100 text-red-700' : 'bg-orange-100 text-orange-700'
                 }`}>
                     <span className="flex items-center gap-1.5">
-                        {status === 'submitted' ? <CheckCircle className="w-3.5 h-3.5" /> : <Clock className="w-3.5 h-3.5" />}
-                        {status === 'submitted' ? 'Submitted' : 'Draft'}
+                        {status === 'submitted' ? <CheckCircle className="w-3.5 h-3.5" /> : 
+                         status === 'late' ? <AlertTriangle className="w-3.5 h-3.5" /> : 
+                         <Clock className="w-3.5 h-3.5" />}
+                        {status}
                     </span>
                 </Badge>
             );
@@ -68,30 +72,44 @@ export const getMyReportColumns = (navigate, handleDelete) => [
                 handleDelete(report._id);
             };
 
-            // Added strict parentheses to ensure logic evaluates perfectly
             const canEdit = report.status === 'draft' || (report.status === 'late' && !report.submittedAt);
 
             return (
-                <DropdownMenu>
-                    {/* FIXED: Removed asChild and nested Button */}
-                    <DropdownMenuTrigger className="h-8 w-8 flex items-center justify-center rounded-md hover:bg-slate-100 outline-none transition-colors">
-                        <MoreHorizontal className="h-4 w-4 text-slate-500" />
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="rounded-xl border-slate-200">
-                        {canEdit ? (
-                            <DropdownMenuItem onClick={() => navigate(`/my-reports/${report._id}/edit`)} className="cursor-pointer font-medium">
-                                <Edit className="w-4 h-4 mr-2 text-blue-600" /> Edit Draft
-                            </DropdownMenuItem>
-                        ) : (
+                <div className="flex items-center justify-end gap-1">
+                    
+                    <Button 
+                        variant="ghost" 
+                        size="sm"
+                        onClick={() => navigate(`/my-reports/${report._id}/view`)} 
+                        className="h-8 w-8 p-0 text-slate-500 hover:text-blue-600 hover:bg-blue-50 transition-colors"
+                        title="View Report"
+                    >
+                        <Eye className="w-4 h-4" />
+                    </Button>
+
+                    <DropdownMenu>
+                        <DropdownMenuTrigger className="h-8 w-8 flex items-center justify-center rounded-md hover:bg-slate-100 outline-none transition-colors">
+                            <MoreHorizontal className="h-4 w-4 text-slate-500" />
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="rounded-xl border-slate-200 bg-white">
+                            
                             <DropdownMenuItem onClick={() => navigate(`/my-reports/${report._id}/view`)} className="cursor-pointer font-medium">
                                 <Eye className="w-4 h-4 mr-2 text-slate-600" /> View Details
                             </DropdownMenuItem>
-                        )}
-                        <DropdownMenuItem onClick={attemptDelete} className="cursor-pointer font-medium text-red-600 focus:text-red-700 focus:bg-red-50">
-                            <Trash2 className="w-4 h-4 mr-2" /> Delete
-                        </DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
+                            
+                            {canEdit && (
+                                <DropdownMenuItem onClick={() => navigate(`/my-reports/${report._id}/edit`)} className="cursor-pointer font-medium">
+                                    <Edit className="w-4 h-4 mr-2 text-blue-600" /> Edit Draft
+                                </DropdownMenuItem>
+                            )}
+                            
+                            <DropdownMenuItem onClick={attemptDelete} className="cursor-pointer font-medium text-red-600 focus:text-red-700 focus:bg-red-50">
+                                <Trash2 className="w-4 h-4 mr-2" /> Delete
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+
+                </div>
             );
         },
     },

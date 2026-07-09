@@ -8,6 +8,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
 
 export const getTeamReportColumns = (handleView, handleUnlock, handleDelete) => [
     {
@@ -52,24 +53,41 @@ export const getTeamReportColumns = (handleView, handleUnlock, handleDelete) => 
         cell: ({ row }) => {
             const report = row.original;
             return (
-                <DropdownMenu>
-                    <DropdownMenuTrigger className="h-8 w-8 flex items-center justify-center rounded-md hover:bg-slate-100 outline-none transition-colors">
-                        <MoreHorizontal className="h-4 w-4 text-slate-500" />
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="rounded-xl border-slate-200">
-                        <DropdownMenuItem onClick={() => handleView(report._id)} className="cursor-pointer font-medium">
-                            <Eye className="w-4 h-4 mr-2 text-blue-600" /> View Details
-                        </DropdownMenuItem>
-                        {(report.status === 'submitted' || report.status === 'late') && (
+                <div className="flex items-center justify-end gap-1">
+                    
+                    <Button 
+                        variant="ghost" 
+                        size="sm"
+                        onClick={() => handleView(report._id)}
+                        className="h-8 w-8 p-0 text-slate-500 hover:text-blue-600 hover:bg-blue-50 transition-colors"
+                        title="View Report"
+                    >
+                        <Eye className="w-4 h-4" />
+                    </Button>
+
+                    <DropdownMenu>
+                        <DropdownMenuTrigger className="h-8 w-8 flex items-center justify-center rounded-md hover:bg-slate-100 outline-none transition-colors">
+                            <MoreHorizontal className="h-4 w-4 text-slate-500" />
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="rounded-xl border-slate-200 bg-white">
+                            
+                            <DropdownMenuItem onClick={() => handleView(report._id)} className="cursor-pointer font-medium">
+                                <Eye className="w-4 h-4 mr-2 text-slate-600" /> View Details
+                            </DropdownMenuItem>
+                            
+                            {(report.status === 'submitted' || report.status === 'late') && (
                             <DropdownMenuItem onClick={() => handleUnlock(report._id)} className="cursor-pointer font-medium">
                                 <Unlock className="w-4 h-4 mr-2 text-orange-600" /> Unlock to Draft
                             </DropdownMenuItem>
-                        )}
-                        <DropdownMenuItem onClick={() => handleDelete(report._id)} className="cursor-pointer font-medium text-red-600 focus:text-red-700 focus:bg-red-50">
-                            <Trash2 className="w-4 h-4 mr-2" /> Delete Report
-                        </DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
+                            )}
+                            
+                            <DropdownMenuItem onClick={() => handleDelete(report._id)} className="cursor-pointer font-medium text-red-600 focus:text-red-700 focus:bg-red-50">
+                                <Trash2 className="w-4 h-4 mr-2" /> Delete Report
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+
+                </div>
             );
         },
     },
