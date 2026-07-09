@@ -5,7 +5,8 @@ const {
     approveUser,
     setupPassword,
     login,
-    getPendingUsers
+    getPendingUsers,
+    getAllUsers
 } = require('../controllers/auth.controller');
 const { protect, managerOnly } = require('../middleware/auth.middleware');
 
@@ -15,5 +16,5 @@ router.post('/login', login);
 
 router.get('/pending-users', protect, managerOnly, getPendingUsers);
 router.put('/approve/:userId', protect, managerOnly, approveUser);
-
+router.get('/all-users', protect, managerOnly, getAllUsers);
 module.exports = router;
