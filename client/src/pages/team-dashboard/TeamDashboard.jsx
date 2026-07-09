@@ -39,13 +39,28 @@ const TeamDashboard = () => {
             today.setHours(0, 0, 0, 0); 
 
             const processedReports = reportsRes.data.map(report => {
-                if (report.status === 'submitted' && report.weekEndDate) {
-                    const endDate = new Date(report.weekEndDate);
-                    if (endDate < today) {
-                        return { ...report, status: 'late' };
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                const endDate = report.weekEndDate ? new Date(report.weekEndDate) : null;
+                if (endDate) endDate.setHours(0,0,0,0);
+
+                let displayStatus = report.status;
+                        
+                if (report.status === 'draft' && endDate && endDate < today) {
+                    displayStatus = 'late';
+                } else if (report.status === 'submitted' && report.submittedAt) {
+                    const submitDate = new Date(report.submittedAt);
+                    submitDate.setHours(0,0,0,0);
+                    if (endDate && submitDate > endDate) {
+                        displayStatus = 'late';
                     }
                 }
-                return report;
+            
+                return { 
+                    ...report, 
+                    status: displayStatus, 
+                    originalStatus: report.status
+                };
             });
 
             setReports(processedReports);
@@ -177,7 +192,7 @@ const TeamDashboard = () => {
                             >
                                 <option value="">All Statuses</option>
                                 <option value="submitted">Submitted</option>
-                                <option value="draft">Pending / Draft</option>
+                                <option value="draft">Pending</option>
                                 <option value="late">Late</option>
                             </select>
                         </div>

@@ -1,4 +1,4 @@
-import { Eye, Unlock, Trash2, MoreHorizontal } from "lucide-react";
+import { Eye, Unlock, Trash2, MoreHorizontal, CheckCircle, AlertTriangle, Clock } from "lucide-react";
 import { format } from "date-fns";
 import DataTableColumnHeader from "@/components/DataTableColumnHeader";
 import { Badge } from "@/components/ui/badge";
@@ -38,13 +38,27 @@ export const getTeamReportColumns = (handleView, handleUnlock, handleDelete) => 
         accessorKey: "status",
         header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
         cell: ({ row }) => {
-            const status = row.getValue("status");
+            const status = row.getValue("status") || "draft";
+            const isLateDraft = status === 'late' && row.original.originalStatus === 'draft';
+
+            const displayText = isLateDraft 
+                ? 'Late (Pending)' 
+                : status === 'draft' 
+                    ? 'Pending' 
+                    : status;
+
             return (
-                <Badge variant="outline" className={`border-0 capitalize font-bold ${
+                <Badge variant="outline" className={`px-3 py-1.5 border-0 font-bold capitalize ${
                     status === 'submitted' ? 'text-green-700' : 
                     status === 'late' ? 'text-red-700' : 'text-orange-700'
                 }`}>
-                    {status}
+                    <span className="flex items-center gap-1.5">
+                        {status === 'submitted' ? <CheckCircle className="w-3.5 h-3.5" /> : 
+                         status === 'late' ? <AlertTriangle className="w-3.5 h-3.5" /> : 
+                         <Clock className="w-3.5 h-3.5" />}
+                        
+                        {displayText}
+                    </span>
                 </Badge>
             );
         },
