@@ -1,72 +1,88 @@
 import { useContext } from "react";
-import { Navigate, Outlet, Link } from "react-router-dom";
+import { Navigate, Outlet, Link, useLocation } from "react-router-dom";
 import { AuthContext } from "@/context/AuthContext";
-import { LayoutDashboard, FileText, LogOut } from "lucide-react";
+import { LayoutDashboard, FileText, LogOut, FolderKanban, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const DashboardLayout = () => {
     const { currentUser, isLoading, logout } = useContext(AuthContext);
+    const location = useLocation();
 
-    if (isLoading) return <div className="flex h-screen items-center justify-center">Loading...</div>;
+    if (isLoading) return <div className="flex h-screen items-center justify-center bg-slate-50">Loading...</div>;
     if (!currentUser) return <Navigate to="/login" replace />;
 
-    return (
-        <div className="flex h-screen bg-blue-50 text-blue-900">
+    // Helper for active link styles
+    const isActive = (path) => location.pathname === path;
 
-            {/* sidebar */}
-            <aside className="w-64 border-r border-blue-200 bg-white flex flex-col">
-                <div className="h-16 flex items-center px-6 border-b border-blue-200">
-                    <span className="font-bold text-xl text-blue-600">Sinesco</span>
-                    <span className="font-semibold text-sl ml-1">Portal</span>
+    return (
+        <div className="flex h-screen bg-slate-50 text-slate-900">
+            {/* Sidebar - Refined with subtle border and professional spacing */}
+            <aside className="w-64 border-r border-slate-200 bg-white flex flex-col shadow-sm z-10">
+                <div className="h-20 flex items-center px-8 border-b border-slate-100">
+                    <span className="font-extrabold text-2xl tracking-tight text-slate-900">
+                        Sinesco<span className="text-blue-600">.</span>
+                    </span>
                 </div>
 
-                <nav className="flex-1 px-4 py-6 space-y-2">
-                    {/* see their own reports */}
-                    <Link to="/dashboard">
-                        <Button variant="ghost" className="w-full justify-start gap-3 text-base">
+                <nav className="flex-1 px-4 py-8 space-y-1">
+                    <Link to="/my-reports">
+                        <Button variant={isActive('/my-reports') ? "secondary" : "ghost"} className="w-full justify-start gap-3 h-11 rounded-xl text-base font-medium">
                             <FileText className="h-5 w-5" />
                             My Reports
                         </Button>
                     </Link>
 
-                    {/* manager only team dashboard and projects */}
                     {currentUser.role === 'Manager' && (
                         <>
+                            <div className="pt-6 pb-2 px-4 text-[11px] font-bold text-slate-400 uppercase tracking-widest">Management</div>
                             <Link to="/team">
-                                <Button variant="ghost" className="w-full justify-start gap-3 text-base">
+                                <Button variant={isActive('/team') ? "secondary" : "ghost"} className="w-full justify-start gap-3 h-11 rounded-xl text-base font-medium">
                                     <LayoutDashboard className="h-5 w-5" />
                                     Team Dashboard
+                                </Button>
+                            </Link>
+                            <Link to="/projects">
+                                <Button variant={isActive('/projects') ? "secondary" : "ghost"} className="w-full justify-start gap-3 h-11 rounded-xl text-base font-medium">
+                                    <FolderKanban className="h-5 w-5" />
+                                    Manage Projects
                                 </Button>
                             </Link>
                         </>
                     )}
                 </nav>
 
-                <div className="p-4 border-t border-blue-200">
-                    <div className="mb-4 px-2">
-                        <p className="text-sm font-semibold truncate">{currentUser.fullName}</p>
-                        <p className="text-xs text-blue-500 truncate">{currentUser.role}</p>
+                <div className="p-6 border-t border-slate-100 bg-slate-50/50">
+                    <div className="flex items-center gap-3 mb-5">
+                        <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold border border-blue-200 shadow-sm">
+                            {currentUser.fullName.charAt(0)}
+                        </div>
+                        <div className="overflow-hidden">
+                            <p className="text-sm font-bold truncate text-slate-900">{currentUser.fullName}</p>
+                            <p className="text-xs text-slate-500 truncate font-medium">{currentUser.role}</p>
+                        </div>
                     </div>
-                    <Button variant="destructive" className="w-full gap-2" onClick={logout}>
+                    <Button variant="outline" className="w-full gap-2 h-10 rounded-xl border-slate-200 font-semibold text-slate-600 hover:text-red-600 hover:border-red-200 transition-colors" onClick={logout}>
                         <LogOut className="h-4 w-4" />
                         Log Out
                     </Button>
                 </div>
             </aside>
 
-            {/* main content area */}
+            {/* Main Content - Modern "Floating" Content Feel */}
             <div className="flex-1 flex flex-col overflow-hidden">
-                {/* topbar */}
-                <header className="h-16 border-b border-blue-200 bg-white flex items-center justify-end px-6">
-                    <div className="flex items-center gap-4">
-                        <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold">
-                            {currentUser.fullName.charAt(0)}
-                        </div>
-                    </div>
+                <header className="h-20 flex items-center justify-between px-8 bg-white border-b border-slate-100">
+                    <h2 className="text-lg font-bold text-slate-900 capitalize">
+                        {location.pathname.replace('/', '').replace('-', ' ')}
+                    </h2>
+                    <Button variant="ghost" size="icon" className="rounded-full text-slate-400 hover:text-slate-900">
+                        <Settings className="h-5 w-5" />
+                    </Button>
                 </header>
 
-                <main className="flex-1 overflow-y-auto p-6">
-                    <Outlet />
+                <main className="flex-1 overflow-y-auto p-8 bg-slate-50/50">
+                    <div className="max-w-6xl mx-auto">
+                        <Outlet />
+                    </div>
                 </main>
             </div>
         </div>

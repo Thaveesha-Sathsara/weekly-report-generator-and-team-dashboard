@@ -5,7 +5,7 @@ import Register from './pages/Register';
 import DashboardLayout from './components/layout/DashboardLayout';
 import TeamDashboard from './pages/TeamDashboard';
 import SetupPassword from './pages/SetupPassword';
-import Projects from './pages/Projects';
+import Projects from './pages/projects/Projects';
 import MyReports from './pages/MyReports';
 
 function App() {
