@@ -62,7 +62,6 @@ const Members = () => {
                 <DataTable 
                     columns={getMemberColumns(handleApprovalRequest)} 
                     data={users} 
-                    title="All Members"
                     isLoading={isLoading}
                 />
             </div>
