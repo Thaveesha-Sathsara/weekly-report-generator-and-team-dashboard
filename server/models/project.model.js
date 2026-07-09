@@ -15,7 +15,12 @@ const projectSchema = new mongoose.Schema({
         type: String,
         enum: ['Active', 'Archived'],
         default: 'Active',
-    }
+    },
+    teamMembers: [
+        {
+            type: mongoose.Schema.Types.ObjectId, ref: 'User',
+        }
+    ],
 }, { timestamps: true });
 
 module.exports = mongoose.model('Project', projectSchema);
