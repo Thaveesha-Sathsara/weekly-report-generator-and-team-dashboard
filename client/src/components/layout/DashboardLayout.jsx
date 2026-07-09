@@ -3,6 +3,7 @@ import { Navigate, Outlet, Link, useLocation } from "react-router-dom";
 import { AuthContext } from "@/context/AuthContext";
 import { LayoutDashboard, FileText, LogOut, FolderKanban, Settings, Users, Activity } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import  AIChatWidget  from "@/components/AIChatWidget";
 
 const DashboardLayout = () => {
     const { currentUser, isLoading, logout } = useContext(AuthContext);
@@ -98,6 +99,8 @@ const DashboardLayout = () => {
                     </div>
                 </main>
             </div>
+
+            <AIChatWidget />
         </div>
     );
 };

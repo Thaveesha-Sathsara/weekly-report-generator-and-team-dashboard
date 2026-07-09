@@ -42,7 +42,7 @@ exports.handleChat = async (req, res) => {
             contents: `${systemPrompt}\n\nUser Question: ${prompt}`,
         });
 
-        res.status(200).json({ reply: response.output[0].content[0].text });
+        res.status(200).json({ reply: response.text });
     } catch (error) {
         console.error("AI error", error);
         res.status(500).json({ message: 'Error processing AI request', error: error.message });
