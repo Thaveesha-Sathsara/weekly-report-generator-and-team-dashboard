@@ -1,13 +1,22 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState} from "react";
 import { Navigate, Outlet, Link, useLocation } from "react-router-dom";
 import { AuthContext } from "@/context/AuthContext";
-import { LayoutDashboard, FileText, LogOut, FolderKanban, Settings, Users, Activity } from "lucide-react";
+import { LayoutDashboard, FileText, LogOut, FolderKanban, Users, Activity } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import  AIChatWidget  from "@/components/AIChatWidget";
 
 const DashboardLayout = () => {
     const { currentUser, isLoading, logout } = useContext(AuthContext);
     const location = useLocation();
+    const [currentTime, setCurrentTime] = useState(new Date());
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setCurrentTime(new Date());
+        }, 1000);
+
+        return () => clearInterval(timer);
+    }, []);
 
     if (isLoading) return <div className="flex h-screen items-center justify-center bg-slate-50">Loading...</div>;
     if (!currentUser) return <Navigate to="/login" replace />;
@@ -20,7 +29,7 @@ const DashboardLayout = () => {
             <aside className="w-64 border-r border-slate-200 bg-white flex flex-col shadow-sm z-10">
                 <div className="h-20 flex items-center px-8 border-b border-slate-100">
                     <span className="font-extrabold text-2xl tracking-tight text-slate-900">
-                        Sinesco<span className="text-blue-600"> Digital</span>
+                        Sisenco<span className="text-blue-600"> Digital</span>
                     </span>
                 </div>
 
@@ -81,15 +90,27 @@ const DashboardLayout = () => {
                 </div>
             </aside>
 
-            {/* Main Content - Modern "Floating" Content Feel */}
             <div className="flex-1 flex flex-col overflow-hidden">
                 <header className="h-20 flex items-center justify-between px-8 bg-white border-b border-slate-100">
-                    <h2 className="text-lg font-bold text-slate-900 capitalize">
-                        {location.pathname.replace('/', '').replace('-', ' ')}
+                    <h2 className="text-lg font-bold text-slate-900 capitalize flex items-center gap-3">
+                        Weekly Report Portal
+                        <span className="text-slate-300 font-light">|</span>
+                        <span className="text-slate-500 font-medium text-sm tracking-wide">
+                            {currentTime.toLocaleDateString('en-US', { 
+                                weekday: 'short', 
+                                month: 'short', 
+                                day: 'numeric' 
+                            })}
+                        </span>
+                        <span className="text-blue-600 text-sm tracking-wider">
+                            {currentTime.toLocaleTimeString('en-US', { 
+                                hour: '2-digit', 
+                                minute: '2-digit', 
+                                second: '2-digit',
+                                hour12: true 
+                            })}
+                        </span>
                     </h2>
-                    <Button variant="ghost" size="icon" className="rounded-full text-slate-400 hover:text-slate-900">
-                        <Settings className="h-5 w-5" />
-                    </Button>
                 </header>
 
                 <main className="flex-1 overflow-y-auto p-8 bg-slate-50/50">
