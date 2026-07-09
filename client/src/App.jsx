@@ -23,7 +23,7 @@ function App() {
         <Route path="/setup-password" element={<SetupPassword />} />
 
         <Route element={<DashboardLayout />}>
-          <Route path="/dashboard" element={<div>Dashboard Content</div>} />
+          <Route path="/dashboard" element={<DashboardOverview />} />
           <Route path="/team" element={<TeamDashboard />} />
           <Route path="/projects" element={<Projects />} />
           <Route path="/projects/:id/view" element={<ProjectView />} />
@@ -32,7 +32,6 @@ function App() {
           <Route path="/my-reports/:id/edit" element={<ReportForm />} />
           <Route path="/my-reports/:id/view" element={<ReportView />} />
           <Route path="/members" element={<Members />} />
-          <Route path="/dashboard-overview" element={<DashboardOverview />} />
         </Route>
       </Routes>
       <Toaster richColors position="top-right" />
