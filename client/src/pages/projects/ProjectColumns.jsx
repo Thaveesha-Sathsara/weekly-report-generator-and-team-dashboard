@@ -1,8 +1,8 @@
 import { Button } from "@/components/ui/button";
-import { Edit2, Trash2 } from "lucide-react";
+import { Edit2, Trash2, Eye } from "lucide-react";
 import DataTableColumnHeader from "@/components/DataTableColumnHeader";
 
-export const getProjectColumns = (handleEdit, handleDelete) => [
+export const getProjectColumns = (handleView, handleEdit, handleDelete) => [
   {
     accessorKey: "name",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Project Name" />,
@@ -19,10 +19,13 @@ export const getProjectColumns = (handleEdit, handleDelete) => [
       const project = row.original;
       return (
         <div className="flex justify-end gap-2">
-          <Button variant="ghost" size="sm" onClick={() => handleEdit(row.original)} className="text-slate-500 hover:text-blue-600">
+          <Button variant="ghost" size="sm" onClick={() => handleView(project._id)} className="text-blue-600 hover:text-blue-800 hover:bg-blue-50">
+            <Eye className="w-4 h-4" />
+          </Button>
+          <Button variant="ghost" size="sm" onClick={() => handleEdit(project)} className="text-slate-500 hover:text-blue-600">
             <Edit2 className="w-4 h-4" />
           </Button>
-          <Button variant="ghost" size="sm" onClick={() => handleDelete(row.original._id)} className="text-slate-500 hover:text-red-600">
+          <Button variant="ghost" size="sm" onClick={() => handleDelete(project._id)} className="text-slate-500 hover:text-red-600">
             <Trash2 className="w-4 h-4" />
           </Button>
         </div>
