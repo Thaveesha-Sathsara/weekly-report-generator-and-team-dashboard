@@ -1,45 +1,44 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
+import {
+    AlertDialog,
+    AlertDialogContent,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogCancel,
+    AlertDialogAction,
+} from "@/components/ui/alert-dialog";
 
-const ConfirmModal = ({ 
-    isOpen, 
-    onClose, 
-    onConfirm, 
-    title, 
-    description, 
-    confirmText = "Confirm", 
-    variant = "destructive",
-    isLoading = false 
-}) => {
+const ConfirmModal = ({ isOpen, onClose, onConfirm, title, description, confirmText = "Confirm", variant = "default" }) => {
     return (
-        <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-            <DialogContent className="sm:max-w-md rounded-3xl bg-white p-8 border border-slate-200 shadow-2xl">
-                <DialogHeader className="mb-2">
-                    <DialogTitle className="text-xl font-bold text-slate-900">{title}</DialogTitle>
-                    <DialogDescription className="text-slate-500 mt-2 leading-relaxed">
+        <AlertDialog open={isOpen} onOpenChange={onClose}>
+            <AlertDialogContent className="rounded-3xl border-slate-200 shadow-2xl bg-white p-8">
+                <AlertDialogHeader>
+                    <AlertDialogTitle className="text-xl font-bold text-slate-900">{title}</AlertDialogTitle>
+                    <AlertDialogDescription className="text-slate-500 font-medium">
                         {description}
-                    </DialogDescription>
-                </DialogHeader>
-                <div className="flex justify-end gap-3 mt-6">
-                    <Button 
-                        variant="outline" 
+                    </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter className="mt-6">
+                    <AlertDialogCancel 
                         onClick={onClose} 
-                        disabled={isLoading} 
-                        className="rounded-xl"
+                        className="rounded-xl font-bold border-slate-200 text-slate-600 hover:bg-slate-100 h-11 px-6"
                     >
                         Cancel
-                    </Button>
-                    <Button 
-                        variant={variant} 
+                    </AlertDialogCancel>
+                    <AlertDialogAction 
                         onClick={onConfirm} 
-                        disabled={isLoading} 
-                        className="rounded-xl"
+                        className={`rounded-xl font-bold h-11 px-6 ${
+                            variant === 'destructive' 
+                            ? 'bg-red-600 text-white hover:bg-red-700' 
+                            : 'bg-blue-600 text-white hover:bg-blue-700'
+                        }`}
                     >
-                        {isLoading ? "Processing..." : confirmText}
-                    </Button>
-                </div>
-            </DialogContent>
-        </Dialog>
+                        {confirmText}
+                    </AlertDialogAction>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
     );
 };
 

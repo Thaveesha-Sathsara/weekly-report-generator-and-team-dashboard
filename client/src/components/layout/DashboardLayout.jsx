@@ -21,7 +21,7 @@ const DashboardLayout = () => {
             <aside className="w-64 border-r border-slate-200 bg-white flex flex-col shadow-sm z-10">
                 <div className="h-20 flex items-center px-8 border-b border-slate-100">
                     <span className="font-extrabold text-2xl tracking-tight text-slate-900">
-                        Sinesco<span className="text-blue-600">.</span>
+                        Sinesco<span className="text-blue-600"> Digital</span>
                     </span>
                 </div>
 

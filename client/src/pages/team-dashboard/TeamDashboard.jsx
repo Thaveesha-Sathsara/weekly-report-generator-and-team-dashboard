@@ -7,6 +7,7 @@ import { Filter, Users, FolderKanban, Activity, Calendar } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import DataTable from '@/components/DataTable';
 import { getTeamReportColumns } from './TeamReportColumns';
+import ConfirmModal from '@/components/ConfirmModal';
 
 const TeamDashboard = () => {
     const navigate = useNavigate();
@@ -14,6 +15,10 @@ const TeamDashboard = () => {
     const [projects, setProjects] = useState([]);
     const [employees, setEmployees] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    
+    // Modals state
+    const [reportToUnlock, setReportToUnlock] = useState(null);
+    const [reportToDelete, setReportToDelete] = useState(null); // <-- Added missing state
 
     // Filter States
     const [selectedEmployee, setSelectedEmployee] = useState('');
@@ -22,76 +27,85 @@ const TeamDashboard = () => {
     const [filterStartDate, setFilterStartDate] = useState('');
     const [filterEndDate, setFilterEndDate] = useState('');
 
-    useEffect(() => {
-        const fetchDashboardData = async () => {
-            try {
-                const [reportsRes, projectsRes] = await Promise.all([
-                    axiosInstance.get('/reports'),
-                    axiosInstance.get('/projects')
-                ]);
-                
-                const today = new Date();
-                today.setHours(0, 0, 0, 0); // Normalize today to midnight for fair comparison
+    const fetchDashboardData = async () => {
+        setIsLoading(true);
+        try {
+            const [reportsRes, projectsRes] = await Promise.all([
+                axiosInstance.get('/reports'),
+                axiosInstance.get('/projects')
+            ]);
+            
+            const today = new Date();
+            today.setHours(0, 0, 0, 0); 
 
-                // DYNAMIC LATE CALCULATION:
-                // Map over reports and upgrade overdue drafts to 'late'
-                const processedReports = reportsRes.data.map(report => {
-                    if (report.status === 'draft' && report.weekEndDate) {
-                        const endDate = new Date(report.weekEndDate);
-                        if (endDate < today) {
-                            return { ...report, status: 'late' };
-                        }
+            const processedReports = reportsRes.data.map(report => {
+                if (report.status === 'submitted' && report.weekEndDate) {
+                    const endDate = new Date(report.weekEndDate);
+                    if (endDate < today) {
+                        return { ...report, status: 'late' };
                     }
-                    return report;
-                });
+                }
+                return report;
+            });
 
-                setReports(processedReports);
-                setProjects(projectsRes.data);
+            setReports(processedReports);
+            setProjects(projectsRes.data);
 
-                // Extract unique employees
-                const uniqueEmployees = Array.from(new Set(processedReports.map(r => r.userId?._id)))
-                    .map(id => processedReports.find(r => r.userId?._id === id)?.userId)
-                    .filter(Boolean);
-                setEmployees(uniqueEmployees);
+            const uniqueEmployees = Array.from(new Set(processedReports.map(r => r.userId?._id)))
+                .map(id => processedReports.find(r => r.userId?._id === id)?.userId)
+                .filter(Boolean);
+            setEmployees(uniqueEmployees);
 
-            } catch (error) {
-                toast.error("Failed to fetch dashboard data");
-                console.error(error);
-            } finally {
-                setIsLoading(false);
-            }
-        };
+        } catch (error) {
+            toast.error("Failed to fetch dashboard data");
+            console.error(error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    useEffect(() => {
         fetchDashboardData();
     }, []);
 
-    const handleUnlock = async (id) => {
-        if (!window.confirm("Unlock this report and send it back to the employee as a draft?")) return;
+    const executeUnlock = async () => {
+        if (!reportToUnlock) return;
         try {
-            await axiosInstance.put(`/reports/${id}/unlock`);
+            await axiosInstance.put(`/reports/${reportToUnlock}/unlock`);
             toast.success("Report unlocked successfully");
-            // A real app might re-fetch here, or just reload the page for simplicity
-            window.location.reload(); 
+            setReportToUnlock(null);
+            fetchDashboardData(); 
         } catch (error) {
             toast.error("Failed to unlock report");
             console.error(error);
         }
     };
 
-    // Apply ALL filters to the reports array
+    const executeDelete = async () => {
+        if (!reportToDelete) return;
+        try {
+            await axiosInstance.delete(`/reports/${reportToDelete}`);
+            toast.success("Report permanently deleted");
+            setReports(reports.filter(r => r._id !== reportToDelete));
+            setReportToDelete(null);
+        } catch (error) {
+            toast.error("Failed to delete report");
+            console.error(error);
+        }
+    };
+
     const filteredReports = useMemo(() => {
         return reports.filter(report => {
             const matchEmployee = selectedEmployee ? report.userId?._id === selectedEmployee : true;
             const matchProject = selectedProject ? report.projectId?._id === selectedProject : true;
             const matchStatus = selectedStatus ? report.status === selectedStatus : true;
             
-            // Date Range Logic
             let matchDate = true;
             if (filterStartDate && filterEndDate && report.weekStartDate) {
                 const reportStart = new Date(report.weekStartDate);
                 const queryStart = new Date(filterStartDate);
                 const queryEnd = new Date(filterEndDate);
                 
-                // Set times to midnight to ensure accurate day comparisons
                 reportStart.setHours(0,0,0,0);
                 queryStart.setHours(0,0,0,0);
                 queryEnd.setHours(0,0,0,0);
@@ -112,17 +126,13 @@ const TeamDashboard = () => {
                 </div>
             </div>
 
-            {/* Quick Filter Bar */}
             <Card className="rounded-3xl border border-slate-200 shadow-sm bg-white overflow-hidden">
-                {/* Fixed the padding here (p-6 pb-4 instead of py-4) to distance text from border */}
                 <CardHeader className="bg-slate-50/50 border-b border-slate-100 p-6 pb-4">
                     <CardTitle className="text-sm font-bold text-slate-700 flex items-center gap-2 uppercase tracking-wider">
                         <Filter className="w-4 h-4 text-blue-600" /> Filter Reports
                     </CardTitle>
                 </CardHeader>
                 <CardContent className="p-6">
-                    
-                    {/* Row 1: Dropdowns */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                         <div className="space-y-2">
                             <label className="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-2">
@@ -173,7 +183,6 @@ const TeamDashboard = () => {
                         </div>
                     </div>
 
-                    {/* Row 2: Date Range */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-t border-slate-100">
                         <div className="space-y-2">
                             <label className="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-2">
@@ -197,7 +206,6 @@ const TeamDashboard = () => {
                                     onChange={(e) => setFilterEndDate(e.target.value)}
                                     className="w-full h-11 rounded-xl border border-slate-200 bg-slate-50 px-4 text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 />
-                                {/* Quick Clear Button */}
                                 {(filterStartDate || filterEndDate) && (
                                     <button 
                                         onClick={() => { setFilterStartDate(''); setFilterEndDate(''); }}
@@ -209,22 +217,42 @@ const TeamDashboard = () => {
                             </div>
                         </div>
                     </div>
-
                 </CardContent>
             </Card>
 
-            {/* The DataTable Container */}
             <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
                 <DataTable 
                     columns={getTeamReportColumns(
                         (id) => navigate(`/my-reports/${id}/view`), 
-                        handleUnlock
+                        (id) => setReportToUnlock(id),
+                        (id) => setReportToDelete(id) // <-- Passed the missing 3rd argument
                     )} 
                     data={filteredReports} 
                     title="Report Submissions"
                     isLoading={isLoading}
                 />
             </div>
+
+            <ConfirmModal 
+                isOpen={!!reportToUnlock} 
+                onClose={() => setReportToUnlock(null)}
+                onConfirm={executeUnlock}
+                title="Unlock Report?"
+                description="Are you sure you want to unlock this report? It will be sent back to the team member as a draft."
+                confirmText="Yes, Unlock"
+                variant="destructive" 
+            />
+
+            {/* Added the missing Delete Modal */}
+            <ConfirmModal 
+                isOpen={!!reportToDelete} 
+                onClose={() => setReportToDelete(null)}
+                onConfirm={executeDelete}
+                title="Delete Report?"
+                description="Are you sure you want to permanently delete this report? This action cannot be undone."
+                confirmText="Yes, Delete"
+                variant="destructive" 
+            />
         </div>
     );
 };

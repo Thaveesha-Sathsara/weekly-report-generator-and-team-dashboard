@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import { Eye, Unlock, Trash2, MoreHorizontal } from "lucide-react";
 import { format } from "date-fns";
 import DataTableColumnHeader from "@/components/DataTableColumnHeader";
@@ -54,11 +53,8 @@ export const getTeamReportColumns = (handleView, handleUnlock, handleDelete) => 
             const report = row.original;
             return (
                 <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0 hover:bg-slate-100">
-                            <span className="sr-only">Open menu</span>
-                            <MoreHorizontal className="h-4 w-4 text-slate-500" />
-                        </Button>
+                    <DropdownMenuTrigger className="h-8 w-8 flex items-center justify-center rounded-md hover:bg-slate-100 outline-none transition-colors">
+                        <MoreHorizontal className="h-4 w-4 text-slate-500" />
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="rounded-xl border-slate-200">
                         <DropdownMenuItem onClick={() => handleView(report._id)} className="cursor-pointer font-medium">

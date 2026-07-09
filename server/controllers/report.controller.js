@@ -121,3 +121,19 @@ exports.getReportById = async (req, res) => {
         res.status(500).json({ message: 'Server error', error: error.message });
     }
 };
+
+exports.deleteReport = async (req, res) => {
+    try {
+        const report = await Report.findById(req.params.id);
+        if (!report) return res.status(404).json({ message: "Report not found" })
+        
+        if (report.userId.toString() !== req.user.id && req.user.role !== 'Manager') {
+            return res.status(403).json({ message: "Not authorized to delete this report" });
+        }
+
+        await report.deleteOne();
+        res.status(200).json({ message: 'Report deleted successfully' })
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};

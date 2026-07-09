@@ -6,7 +6,8 @@ const {
     updateReport,
     getAllReports,
     unlockReport,
-    getReportById
+    getReportById,
+    deleteReport
 } = require('../controllers/report.controller');
 const { protect, managerOnly } = require('../middleware/auth.middleware');
 
@@ -16,5 +17,6 @@ router.get('/:id', protect, getReportById);
 router.put('/:id/', protect, updateReport);
 router.get('/', protect, managerOnly, getAllReports);
 router.put('/:id/unlock', protect, managerOnly, unlockReport);
+router.delete('/:id', protect, managerOnly, deleteReport);
 
 module.exports = router;

@@ -1,10 +1,16 @@
-import { Button } from "@/components/ui/button";
-import { CheckCircle, Clock, Eye, Edit } from "lucide-react";
+import { CheckCircle, Clock, Eye, Edit, MoreHorizontal, Trash2 } from "lucide-react";
 import { format } from "date-fns";
 import DataTableColumnHeader from "@/components/DataTableColumnHeader";
 import { Badge } from "@/components/ui/badge";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { toast } from 'sonner';
 
-export const getMyReportColumns = (navigate) => [
+export const getMyReportColumns = (navigate, handleDelete) => [
     {
         id: "dateRange",
         accessorFn: (row) => `${row.weekStartDate} to ${row.weekEndDate}`,
@@ -53,18 +59,39 @@ export const getMyReportColumns = (navigate) => [
         header: () => <div className="text-right font-medium">Actions</div>,
         cell: ({ row }) => {
             const report = row.original;
+            
+            const attemptDelete = () => {
+                if (report.status === 'submitted' || (report.status === 'late' && report.submittedAt)) {
+                    toast.error("Already submitted. You cannot delete this report.");
+                    return;
+                }
+                handleDelete(report._id);
+            };
+
+            // Added strict parentheses to ensure logic evaluates perfectly
+            const canEdit = report.status === 'draft' || (report.status === 'late' && !report.submittedAt);
+
             return (
-                <div className="flex justify-end gap-2">
-                    {report.status === 'draft' ? (
-                        <Button size="sm" variant="outline" className="rounded-lg text-blue-600 border-blue-200 hover:bg-blue-50 hover:border-blue-300" onClick={() => navigate(`/my-reports/${report._id}/edit`)}>
-                            <Edit className="w-4 h-4 mr-2" /> Edit Draft
-                        </Button>
-                    ) : (
-                        <Button size="sm" variant="ghost" className="rounded-lg text-slate-500 hover:text-blue-600 hover:bg-blue-50" onClick={() => navigate(`/my-reports/${report._id}/view`)}>
-                            <Eye className="w-4 h-4 mr-2" /> View
-                        </Button>
-                    )}
-                </div>
+                <DropdownMenu>
+                    {/* FIXED: Removed asChild and nested Button */}
+                    <DropdownMenuTrigger className="h-8 w-8 flex items-center justify-center rounded-md hover:bg-slate-100 outline-none transition-colors">
+                        <MoreHorizontal className="h-4 w-4 text-slate-500" />
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="rounded-xl border-slate-200">
+                        {canEdit ? (
+                            <DropdownMenuItem onClick={() => navigate(`/my-reports/${report._id}/edit`)} className="cursor-pointer font-medium">
+                                <Edit className="w-4 h-4 mr-2 text-blue-600" /> Edit Draft
+                            </DropdownMenuItem>
+                        ) : (
+                            <DropdownMenuItem onClick={() => navigate(`/my-reports/${report._id}/view`)} className="cursor-pointer font-medium">
+                                <Eye className="w-4 h-4 mr-2 text-slate-600" /> View Details
+                            </DropdownMenuItem>
+                        )}
+                        <DropdownMenuItem onClick={attemptDelete} className="cursor-pointer font-medium text-red-600 focus:text-red-700 focus:bg-red-50">
+                            <Trash2 className="w-4 h-4 mr-2" /> Delete
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
             );
         },
     },
