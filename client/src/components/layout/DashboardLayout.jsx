@@ -69,6 +69,8 @@ const DashboardLayout = () => {
                                     User Directory
                                 </Button>
                             </Link>
+
+                            <AIChatWidget />
                         </>
                     )}
                 </nav>
@@ -119,8 +121,6 @@ const DashboardLayout = () => {
                     </div>
                 </main>
             </div>
-
-            <AIChatWidget />
         </div>
     );
 };

@@ -92,7 +92,7 @@ export const getTeamReportColumns = (handleView, handleUnlock, handleDelete) => 
                             
                             {(report.status === 'submitted' || report.status === 'late') && (
                             <DropdownMenuItem onClick={() => handleUnlock(report._id)} className="cursor-pointer font-medium">
-                                <Unlock className="w-4 h-4 mr-2 text-orange-600" /> Unlock to Draft
+                                <Unlock className="w-4 h-4 mr-2 " /> Unlock to Draft
                             </DropdownMenuItem>
                             )}
                             
