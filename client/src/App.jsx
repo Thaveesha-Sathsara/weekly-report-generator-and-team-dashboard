@@ -7,6 +7,7 @@ import TeamDashboard from './pages/team-dashboard/TeamDashboard';
 import SetupPassword from './pages/SetupPassword';
 import Projects from './pages/projects/Projects';
 import MyReports from './pages/reports/MyReports';
+import ProjectView from './pages/projects/ProjectView';
 import ReportForm from './pages/reports/ReportForm';
 import ReportView from './pages/reports/ReportView';
 import Members from './pages/members/Members';
@@ -24,6 +25,7 @@ function App() {
           <Route path="/dashboard" element={<div>Dashboard Content</div>} />
           <Route path="/team" element={<TeamDashboard />} />
           <Route path="/projects" element={<Projects />} />
+          <Route path="/projects/:id/view" element={<ProjectView />} />
           <Route path="/my-reports" element={<MyReports />} />
           <Route path="/my-reports/create" element={<ReportForm />} />
           <Route path="/my-reports/:id/edit" element={<ReportForm />} />
