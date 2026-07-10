@@ -27,10 +27,10 @@ export const AuthProvider = ({ children }) => {
             setCurrentUser(user);
 
             toast.success("Logged in successfully!");
-            return true;
+            return user;
         } catch (error) {
             toast.error(error.response?.data?.message || 'Login failed. Please try again.');
-            return false;
+            return null;
         }
     };
 

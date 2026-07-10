@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
+import { useContext } from 'react';
+import { AuthContext } from '@/context/AuthContext';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -24,11 +26,12 @@ const reportSchema = z.object({
     tasksCompleted: z.string().min(10, { message: "Provide more detail" }),
     tasksPlanned: z.string().min(10, { message: "Provide more detail" }),
     blockers: z.string().optional(),
-    hoursWorked: z.string().optional(),
+    hoursWorked: z.union([z.string(), z.number()]).optional(),
     notes: z.string().optional(),
 });
 
 const ReportForm = () => {
+    const { currentUser } = useContext(AuthContext);
     const { id } = useParams(); // Grabs the ID from the URL if we are editing
     const navigate = useNavigate();
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -123,26 +126,33 @@ const ReportForm = () => {
                                 <FormItem className="flex flex-col">
                                     <FormLabel className="text-slate-700 font-bold uppercase text-xs tracking-wider mb-2">Week Start</FormLabel>
                                     <Popover>
-                                        <PopoverTrigger className="w-full outline-none">
-                                            <div className={cn(
-                                                "flex h-12 w-full items-center rounded-xl border border-slate-200 bg-slate-50 px-4 text-left font-medium transition-colors hover:bg-slate-100 cursor-pointer",
-                                                !field.value && "text-slate-500"
-                                            )}>
-                                                <CalendarIcon className="mr-3 h-4 w-4 opacity-50 text-slate-500" />
-                                                {field.value ? format(field.value, "PPP") : <span>Pick a start date</span>}
-                                            </div>
-                                        </PopoverTrigger>
-                                        <PopoverContent className="w-auto p-0" align="start">
-                                            <Calendar
-                                                mode="single"
-                                                selected={field.value}
+                                        <FormControl>
+                                            <PopoverTrigger 
+                                                className={cn(
+                                                    "flex h-12 w-full items-center rounded-xl border border-slate-200 bg-slate-50 px-4 text-left font-medium cursor-pointer hover:bg-slate-100 transition-colors", 
+                                                    !field.value && "text-muted-foreground"
+                                                )}
+                                            >
+                                                <CalendarIcon className="mr-3 h-4 w-4 opacity-50" />
+                                                {field.value ? format(field.value, "PPP") : <span>Pick start date</span>}
+                                            </PopoverTrigger>
+                                        </FormControl>
+                                        <PopoverContent className="w-auto p-0 shadow-xl border-slate-200" align="start">
+                                            <Calendar 
+                                                mode="single" 
+                                                selected={field.value} 
                                                 onSelect={(date) => {
+                                                    // 1. Set the Start Date
                                                     field.onChange(date);
+                                                    
+                                                    // 2. Automatically calculate and set the End Date (Start + 6 days)
                                                     if (date) {
-                                                        form.setValue('weekEndDate', addDays(date, 6), { shouldValidate: true });
+                                                        const endDate = addDays(date, 6);
+                                                        form.setValue('weekEndDate', endDate, { shouldValidate: true });
                                                     }
-                                                }}
-                                                initialFocus
+                                                }} 
+                                                // Removed the disabled prop so you can pick past dates for reports!
+                                                initialFocus 
                                             />
                                         </PopoverContent>
                                     </Popover>
@@ -152,19 +162,21 @@ const ReportForm = () => {
 
                             <FormField control={form.control} name="weekEndDate" render={({ field }) => (
                                 <FormItem className="flex flex-col">
-                                    <FormLabel className="text-slate-700 font-bold uppercase text-xs tracking-wider mb-2">Week End</FormLabel>
+                                    <FormLabel className="text-slate-700 font-bold uppercase text-xs tracking-wider mb-2">Week End (Auto-Calculated)</FormLabel>
                                     <Popover>
-                                        <PopoverTrigger asChild>
-                                            <FormControl>
-                                                <Button variant={"outline"}  disabled={true} className={cn("h-12 w-full rounded-xl bg-slate-50 justify-start text-left font-medium", !field.value && "text-muted-foreground")}>
-                                                    <CalendarIcon className="mr-3 h-4 w-4 opacity-50" />
-                                                    {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
-                                                </Button>
-                                            </FormControl>
-                                        </PopoverTrigger>
-                                        <PopoverContent className="w-auto p-0" align="start">
-                                            <Calendar mode="single" selected={field.value}  disabled={true} onSelect={field.onChange} initialFocus />
-                                        </PopoverContent>
+                                        <FormControl>
+                                            <PopoverTrigger 
+                                                // Make this completely unclickable for EVERYONE. It's strictly auto-calculated.
+                                                className={cn(
+                                                    "flex h-12 w-full items-center rounded-xl border border-slate-200 px-4 text-left font-medium opacity-70 pointer-events-none bg-slate-100", 
+                                                    !field.value && "text-muted-foreground"
+                                                )}
+                                            >
+                                                <CalendarIcon className="mr-3 h-4 w-4 opacity-50" />
+                                                {field.value ? format(field.value, "PPP") : <span>Auto-fills based on start date</span>}
+                                            </PopoverTrigger>
+                                        </FormControl>
+                                        {/* No PopoverContent needed here because they shouldn't click it anyway! */}
                                     </Popover>
                                     <FormMessage />
                                 </FormItem>

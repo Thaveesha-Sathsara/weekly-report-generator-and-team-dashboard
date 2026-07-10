@@ -22,7 +22,6 @@ const loginSchema = z.object({
 });
 
 const Login = () => {
-    const [users] = useState([]);
     const { login } = useContext(AuthContext);
     const navigate = useNavigate();
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -33,13 +32,18 @@ const Login = () => {
     });
 
     const onSubmit = async (data) => {
-        setIsSubmitting(true);
-        const success = await login(data.email, data.password);
-        setIsSubmitting(false);
-        if (success)  {
-            users.find(u => u.email === data.email)?.role === 'Manager' ? navigate('/dashboard') : navigate('/my-reports');
+    setIsSubmitting(true);
+    const user = await login(data.email, data.password);
+    setIsSubmitting(false);
+
+    if (user) {
+        if (user.role === 'Manager') {
+            navigate('/dashboard');
+        } else {
+            navigate('/my-reports');
         }
-    };
+    }
+};
 
     return (
         /* bg */

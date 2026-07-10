@@ -35,6 +35,16 @@ export const getTeamReportColumns = (handleView, handleUnlock, handleDelete) => 
         },
     },
     {
+        accessorKey: "createdAt",
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Created On" />,
+        cell: ({ row }) => {
+            const date = row.getValue("createdAt");
+            return <span className="text-slate-500 font-medium">
+                {date ? format(new Date(date), "MMM dd, yyyy") : '-'}
+            </span>;
+        },
+    },
+    {
         accessorKey: "status",
         header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
         cell: ({ row }) => {
